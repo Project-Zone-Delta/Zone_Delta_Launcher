@@ -2855,7 +2855,7 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Logo image. */
 #image_seal {
-    height: 70px;
+    height: 100%;
     width: auto;
     position: relative;
     border: 2px solid white;
@@ -2866,8 +2866,8 @@ input:checked + .toggleSwitchSlider:before {
 /* Logo container styles. */
 #image_seal_container {
     position: relative;
-    height: 70px;
-    width: 70px;
+    height: 20%;
+    width: 20%;
     border-radius: 50%;
     margin-top: 50px;
 }

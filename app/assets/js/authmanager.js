@@ -33,7 +33,7 @@ const log                               = LoggerUtil.getLogger('AuthManager')
  * @returns {Promise.<Object>} Promise which resolves the resolved authenticated account object.
  */
 exports.addMojangAccount = async function(email, password, a2f) {
-    // Site pas encore dispo
+    //TODO Site pas encore dispo
     //const auth = new azAuth.AuthClient('https://zone-delta.xyz')
     const auth = new azAuth.AuthClient('https://site-33.net')
     
@@ -252,8 +252,10 @@ exports.removeAzAuthAccount = async function(uuid, accessToken) {
  * @returns {Promise.<boolean>} Promise which resolves to true if the access token is valid,
  * otherwise false.
  */
-async function validateSelectedMojangAccount(){
+async function validateSelectedMojangAccount() {
     const current                       = ConfigManager.getSelectedAccount()
+
+    
     /**const response                      = await MojangRestAPI.validate(current.accessToken, ConfigManager.getClientToken())
 
     if(response.responseStatus === RestResponseStatus.SUCCESS) {
