@@ -2458,7 +2458,7 @@ input:checked + .toggleSwitchSlider:before {
     position: relative;
     transition: top 2s ease;
     top: 0px;
-    height: 77%;
+    height: 85%;
     display: flex;
 }
 #landingContainer > #upper > #left {
@@ -2869,7 +2869,7 @@ input:checked + .toggleSwitchSlider:before {
     height: 20%;
     width: 20%;
     border-radius: 50%;
-    margin-top: 50px;
+    margin-top: 40%;
 }
 
 /* Logo container styles w/ update. */
@@ -2954,7 +2954,7 @@ input:checked + .toggleSwitchSlider:before {
     display: flex;
     flex-direction: column;
     position: relative;
-    top: 50px;
+    top: 10%;
     align-items: flex-start;
     height: calc(100% - 50px);
 }
@@ -3060,16 +3060,15 @@ input:checked + .toggleSwitchSlider:before {
 /* Social media icon shared styles. */
 .mediaSVG {
     fill: #ffffff;
-    height: 12px;
     transition: 0.25s ease;
     cursor: pointer;
-    height: 12px;
-    width: 25px;
+    height: 90%;
+    width: 90%;
 }
 .mediaSVG:hover,
 .mediaURL:focus .mediaSVG,
 .mediaSVG:active {
-    height: 20px;
+    height: 100%;
 }
 
 /* Social media URL shared styles. */
@@ -3094,7 +3093,6 @@ input:checked + .toggleSwitchSlider:before {
 /* Settings icon colors. */
 #settingsSVG {
     stroke: #ffffff;
-    height: 15px;
 }
 .mediaButton:hover #settingsSVG,
 .mediaButton:focus #settingsSVG,
@@ -3181,7 +3179,8 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Style for a general label on the bottom of the landing view. */
 .bot_label {
-    font-size: 9px;
+    font-size: 90%;
+    height: 10;
     letter-spacing: 1px;
     font-weight: bold;
     text-shadow: 0px 0px 0px #bebcbb;
@@ -3389,7 +3388,7 @@ input:checked + .toggleSwitchSlider:before {
 /* Main launch content container. */
 #landingContainer > #lower > #right #launch_content {
     position: relative;
-    top: 25px;
+    top: 20%;
     display: inline-flex;
 }
 
@@ -3423,7 +3422,7 @@ input:checked + .toggleSwitchSlider:before {
 /* Launch details main container, hidden until launch processing begins. */
 #launch_details {
     position: relative;
-    top: 25px;
+    top: -4%;
     display: none;
 }
  
