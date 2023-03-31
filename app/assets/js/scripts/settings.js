@@ -668,7 +668,7 @@ function populateAuthAccounts(){
 
         const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
             <div class="settingsAuthAccountLeft">
-                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://site-33.net/api/skin-api/avatars/face/${acc.username}">
+                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://zone-delta.xyz/api/skin-api/avatars/face/${acc.username}">
             </div>
             <div class="settingsAuthAccountRight">
                 <div class="settingsAuthAccountDetails">
@@ -1480,7 +1480,7 @@ function populateAboutVersionInformation(){
  */
 function populateReleaseNotes(){
     $.ajax({
-        url: 'https://github.com/project-site-33/Site-33-Launcher/releases.atom',
+        url: 'https://github.com/project-zone-delta/zone-delta-Launcher/releases.atom',
         success: (data) => {
             const version = 'v' + remote.app.getVersion()
             const entries = $(data).find('entry')

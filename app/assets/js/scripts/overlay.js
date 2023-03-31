@@ -305,7 +305,7 @@ function populateAccountListings(){
     let htmlString = ''
     for(let i=0; i<accounts.length; i++){
         htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
-            <img src="https://site-33.net/api/skin-api/avatars/face/${accounts[i].username}/">
+            <img src="https://zone-delta.xyz/api/skin-api/avatars/face/${accounts[i].username}/">
             <div class="accountListingName">${accounts[i].displayName}</div>
         </button>`
     }
