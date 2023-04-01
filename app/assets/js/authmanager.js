@@ -213,10 +213,12 @@ exports.removeMojangAccount = async function(uuid){
  */
 exports.removeAzAuthAccount = async function(uuid, accessToken) {
     try {
-        //const authAcc = ConfigManager.getAuthAccount(uuid)
+        const authAcc = ConfigManager.getAuthAccount(uuid)
         //let rep       = AuthClient.logout(authAcc.accessToken)
         //console.log(rep)
         //azAuth.AuthClient.logout(accessToken)
+        //const auth = new azAuth.AuthClient('https://zone-delta.xyz')
+        //const result = await auth.logout(authAcc.accessToken)
         ConfigManager.removeAuthAccount(uuid)
         ConfigManager.save()
         return Promise.resolve()
@@ -254,8 +256,12 @@ exports.removeAzAuthAccount = async function(uuid, accessToken) {
  */
 async function validateSelectedMojangAccount() {
     const current                       = ConfigManager.getSelectedAccount()
+    //const auth = new azAuth.AuthClient('https://zone-delta.xyz')
+    //const result = await auth.verify(current.accessToken)
+    //console.log(result)
 
-    
+    return true;
+
     /**const response                      = await MojangRestAPI.validate(current.accessToken, ConfigManager.getClientToken())
 
     if(response.responseStatus === RestResponseStatus.SUCCESS) {
