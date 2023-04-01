@@ -35,7 +35,7 @@ const log                               = LoggerUtil.getLogger('AuthManager')
 exports.addMojangAccount = async function(email, password, a2f) {
     //TODO Site pas encore dispo
     //const auth = new azAuth.AuthClient('https://zone-delta.xyz')
-    const auth = new azAuth.AuthClient('https://site-33.net')
+    const auth = new azAuth.AuthClient('https://zone-delta.xyz')
     
     let result
 

@@ -132,7 +132,7 @@ function updateSelectedAccount(authUser){
             username = authUser.displayName
         }
         if(authUser.uuid != null){
-            document.getElementById('avatarContainer').style.backgroundImage = `url('https://site-33.net/api/skin-api/avatars/face/${authUser.username}')`
+            document.getElementById('avatarContainer').style.backgroundImage = `url('https://zone-delta.xyz/api/skin-api/avatars/face/${authUser.username}')`
         }
     }
     user_text.innerHTML = username
@@ -1091,7 +1091,7 @@ function displayArticle(articleObject, index){
 function loadNews(){
     return new Promise((resolve, reject) => {
         const distroData = DistroManager.getDistribution()
-        const newsFeed =  isDev ? "https://site-33.net/api/rss" : distroData.getRSS()
+        const newsFeed =  isDev ? "https://zone-delta.xyz/api/rss" : distroData.getRSS()
         const newsHost = new URL(newsFeed).origin + '/'
         $.ajax({
             url: newsFeed,
