@@ -254,7 +254,6 @@ exports.removeAzAuthAccount = async function(uuid, accessToken) {
  */
 async function validateSelectedMojangAccount() {
     const current                       = ConfigManager.getSelectedAccount()
-
     
     /**const response                      = await MojangRestAPI.validate(current.accessToken, ConfigManager.getClientToken())
 

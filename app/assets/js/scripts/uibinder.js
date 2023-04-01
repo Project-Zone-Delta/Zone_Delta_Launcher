@@ -362,7 +362,7 @@ async function validateSelectedAccount(){
                     validateEmail(selectedAcc.username)
                 }*/
 
-                document.getElementById('loginUsername').value = selectedAcc.username
+                //document.getElementById('loginUsername').value = selectedAcc.username
                 validateEmail(selectedAcc.username)
                 
                 loginOptionsViewOnLoginSuccess = getCurrentView()
