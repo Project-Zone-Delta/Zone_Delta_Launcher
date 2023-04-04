@@ -3093,11 +3093,12 @@ input:checked + .toggleSwitchSlider:before {
 /* Settings icon colors. */
 #settingsSVG {
     stroke: #ffffff;
+    height: 23px;
 }
 .mediaButton:hover #settingsSVG,
 .mediaButton:focus #settingsSVG,
 .mediaButton:active #settingsSVG {
-    height: 23px;
+    height: 25px;
 }
 
 /* Settings tooltip styles. */
