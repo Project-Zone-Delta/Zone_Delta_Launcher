@@ -39,10 +39,15 @@ exports.addMojangAccount = async function(email, password, a2f) {
     
     let result
 
-    if (a2f === null) result = await auth.login(email, password)
-    else result = await auth.login(email, password, a2f)
+    if (a2f === null) {
+        result = await auth.login(email, password);
+    } else {
+        result = await auth.login(email, password, a2f);
+    }
 
-    if (result.status === 'pending' && result.requires2fa) result = await auth.login(email, password, a2f)
+    if (result.status === 'pending' && result.requires2fa) {
+        return {needA2F: true}
+    }
 
     if (result.status !== 'success') {
         throw 'Unexpected result: ' + JSON.stringify(result)
