@@ -22,6 +22,11 @@
     src: url('../fonts/Ringbearer.ttf');
 }
 
+@font-face {
+    font-family: 'Comfortaa';
+    src: url('../fonts/Comfortaa.ttf');
+}
+
 /*******************************************************************************
  *                                                                             *
  * Element Styles                                                              *
@@ -42,7 +47,7 @@ p {
 
 /* Set default font and color. */
 body, button {
-    font-family: 'Avenir Book';
+    font-family: 'Comfortaa';
     color: white;
 }
 
@@ -372,7 +377,7 @@ body, button {
 /* Styles for dimmer login span. */
 .loginSpanDim {
     font-size: 12px;
-    color: #848484;
+    color: #CDCDCD;
     font-weight: bold;
 }
 
@@ -385,7 +390,7 @@ body, button {
     height: 100%;
     width: 100%;
     transition: filter 0.25s ease;
-    background: rgba(0, 0, 0, 0.50);
+    /*background: rgba(0, 0, 0, 0.50);*/
 }
 
 /* Login cancel button styles. */
@@ -470,10 +475,13 @@ body, button {
 /* Login form anchor styles. */
 #loginForm a {
     font-size: 12px;
-    color: #848484;
+    color: #CDCDCD;
     font-weight: bold;
     text-decoration: none;
     transition: 0.25s ease;
+}
+#notRegister {
+    text-decoration: underline !important;
 }
 #loginForm a:hover,
 #loginForm a:focus {
@@ -486,29 +494,35 @@ body, button {
 
 /* Logo on login form. */
 #loginImageSeal {
-    border-radius: 50%;
-    border: 2px solid #cad7e1;
-    background: rgba(1, 2, 1, 0.5);
-    height: 125px;
-    width: 125px;
-    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    /*border-radius: 50%;
+    border: 2px solid #cad7e1;*/
+    /*background: rgba(1, 2, 1, 0.5);*/
+    height: 110px;
+    width: 128px;
+    /*box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);*/
     margin-bottom: 20px;
 }
 
 /* Header on login view. */
 #loginSubheader {
-    font-family: 'Avenir Medium';
-    margin-bottom: 25px;
-    font-size: 12px;
+    font-family: 'Comfortaa';
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-size: 16px;
     letter-spacing: 1px;
     font-weight: bold;
 }
 
 /* Container to organize login field elements. */
 .loginFieldContainer {
+    /*Field Constructor*/
     position: relative;
-    display: flex;
-    flex-direction: column;
+    width: 280px;
+    margin-bottom: 20px;
+
+    /*Grid Display*/
+    display: grid;
+    grid-template-columns: 30px 250px;
     justify-content: center;
     align-items: center;
 }
@@ -522,14 +536,14 @@ body, button {
 
 /* Span which displays errors related to login field content. */
 .loginErrorSpan {
-    font-family: 'Avenir Medium';
+    font-family: 'Comfortaa';
     font-weight: bold;
     font-size: 8px;
     color: #ff1b0c;
     width: 100%;
     text-align: right;
     position: absolute;
-    top: 7px;
+    bottom: -15px;
     opacity: 0;
     transition: 0.25s ease;
 }
@@ -558,20 +572,27 @@ body, button {
 
 /* Login text input styles. */
 .loginField {
-    font-family: 'Avenir Book';
-    background: none;
-    border-width: 1.5px 0px 0px 0px;
-    border-style: solid;
+    /*Text Style*/
+    font-family: 'Comfortaa';
+
+    /*Base Construct*/
+    background: rgba(0, 0, 0, 0.3);
     width: 250px;
-    margin-bottom: 20px;
-    border-color: #fff;
-    color: rgba(255, 255, 255, 0.75);
-    font-weight: bold;
+    height: 30px;
+    font-size: 12px;
+    color: #CDCDCD;
+
+    /*Text Construct*/
     text-align: center;
-    box-sizing: border-box;
-    padding: 7.5px;
-    font-size: 10px;
     letter-spacing: 1px;
+
+    /*Spacing*/
+    margin-top: 5px;
+    padding: 7.5px;
+
+    /*Border Construct*/
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
 }
 .loginField:focus {
     outline: none;
@@ -787,7 +808,7 @@ body, button {
 /* Disclaimer text styles. */
 .loginDisclaimerText {
     font-size: 7px;
-    color: #848484;
+    color: #CDCDCD;
     font-weight: bold;
     text-align: center;
 }
@@ -805,6 +826,8 @@ body, button {
     cursor: pointer;
     font-size: 22px;
     -webkit-user-select: none;
+    margin-left: 20px;
+    padding-left: 50px;
 }
 
 /* Hide the default checkbox. */
@@ -3964,4 +3987,104 @@ input:checked + .toggleSwitchSlider:before {
 /* Class which is applied when the spinner image is spinning. */
 .rotating {
     animation: rotating 10s linear infinite;
+}
+
+@media screen and (min-width: 1100px) and (max-width: 1599px) {
+    .loginSpanDim {
+        font-size: 14px;
+    }
+    .loginCheckmark {
+        height: 14px;
+        width: 14px;
+    }
+    #checkmarkContainer .loginCheckmark:after {
+        width: 4px;
+        height: 8px;
+        margin-left: 1px;
+    }
+    #loginForm a {
+        font-size: 14px;
+    }
+    #loginRememberOption {
+        height: 14px;
+        width: 14px;
+    }
+    .loginDisclaimerText {
+        font-size: 10px;
+    }
+    #loginButtonContent {
+        font-size: 16px;
+    }
+    .loginSVG {
+        height: 24px;
+        width: 24px;
+    }
+    .loginFieldContainer {
+        width: 335px;
+        grid-template-columns: 35px 300px;
+    }
+    .loginField {
+        width: 300px;
+        height: 35px;
+
+        font-size: 14px;
+    }
+    .loginField::placeholder {
+        font-size: 14px;
+    }
+    #loginImageSeal {
+        height: 137px;
+        width: 160px;
+        margin-bottom: 25px;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .loginSpanDim {
+        font-size: 18px;
+    }
+    .loginCheckmark {
+        height: 18px;
+        width: 18px;
+    }
+    #checkmarkContainer .loginCheckmark:after {
+        width: 7px;
+        height: 11px;
+        margin-left: 1px;
+    }
+    #loginForm a {
+        font-size: 18px;
+    }
+    #loginRememberOption {
+        height: 18px;
+        width: 18px;
+    }
+    .loginDisclaimerText {
+        font-size: 12px;
+    }
+    #loginButtonContent {
+        font-size: 20px;
+    }
+    .loginSVG {
+        height: 32px;
+        width: 32px;
+    }
+    .loginFieldContainer {
+        width: 385px;
+        grid-template-columns: 35px 350px;
+    }
+    .loginField {
+        width: 350px;
+        height: 40px;
+
+        font-size: 16px;
+    }
+    .loginField::placeholder {
+        font-size: 16px;
+    }
+    #loginImageSeal {
+        height: 154px;
+        width: 180px;
+        margin-bottom: 25px;
+    }
 }
