@@ -4,6 +4,7 @@ let nowPlaying, nowPlayingTimeout, interval;
 
 const radio = new Audio('http://radio.zone-delta.xyz/listen/zone_delta/radio.mp3');
 
+const homeRadioButton = document.getElementsByClassName('radio-home-button')?.[0];
 const radioImage = document.getElementsByClassName('musique-img')?.[0];
 const radioTitle = document.getElementsByClassName('musique-title')?.[0];
 const authorName = document.getElementsByClassName('author-title')?.[0];
@@ -18,6 +19,10 @@ function loadRadio() {
             if (!radio.paused) loadNowPlaying();
         }, 15_000);
     }
+
+    homeRadioButton.onclick = () => {
+        switchView(getCurrentView(), VIEWS.landing);
+    };
 }
 
 /**
