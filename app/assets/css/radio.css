@@ -158,6 +158,7 @@
 }
 
 .radio-home-button {
+    position: relative;
     display: block;
 
     background: #fff;
@@ -173,4 +174,6 @@
     font-size: 1.1rem;
 
     cursor: pointer;
+
+    mix-blend-mode: difference;
 }
