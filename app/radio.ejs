@@ -1,0 +1,29 @@
+<div id="radioContainer" style="display: none;">
+    <div class="radio-player">
+        <section class="radio-launcher">
+                <div class="img-radio">
+                <img class="musique-img" src="assets/images/icon.png" alt="song-img">
+            </div>
+            <div class="description">
+                <strong>
+                    <h1 class="musique-title"></h1>
+                </strong>
+                <p class="album-title"></p>
+                <p class="author-title"></p>
+                <div class="slider-cont">
+                    <div class="player_btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="play" height="24px" viewBox="0 0 24 24" width="24px" fill="white"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M10 8.64v6.72L15.27 12z" opacity=".3"></path><path d="M8 19l11-7L8 5v14zm2-10.36L15.27 12 10 15.36V8.64z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="pause hidden" height="24px" viewBox="0 0 24 24" width="24px" fill="white"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+                    </div>
+                    <div class="slider">
+                        <input class="volume-bar" type="range" min="0" max="100" value="50">
+                        <progress id="progress-bar" min="0" max="100" value="50"></progress>
+                    </div>
+                    <div class="slider-value">50%</div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script src="./assets/js/scripts/radio.js"></script>

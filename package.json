@@ -26,6 +26,7 @@
     "@electron/remote": "^2.0.8",
     "adm-zip": "^0.5.9",
     "async": "^3.2.4",
+    "axios": "^1.4.0",
     "azuriom-auth": "^1.0.1",
     "discord-rpc-patch": "^4.0.1",
     "ejs": "^3.1.8",

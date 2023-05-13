@@ -124,6 +124,11 @@ document.getElementById('avatarOverlay').onclick = (e) => {
     })
 }
 
+document.getElementById("radioSettingsButton").onclick = (e) => {
+    prepareSettings()
+    switchView(getCurrentView(), VIEWS.radio, undefined, undefined, undefined, loadRadio);
+}
+
 // Bind selected account
 function updateSelectedAccount(authUser){
     let username = 'No Account Selected'
