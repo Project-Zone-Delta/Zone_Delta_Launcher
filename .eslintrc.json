@@ -25,8 +25,7 @@
             "single"
         ],
         "semi": [
-            "error",
-            "never"
+            "error"
         ],
         "no-var": [
             "error"
