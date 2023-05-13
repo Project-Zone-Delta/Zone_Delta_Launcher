@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-let nowPlaying, nowPlayingTimeout, interval;
+let interval;
 
 const radio = new Audio('http://radio.zone-delta.xyz/listen/zone_delta/radio.mp3');
 
@@ -28,7 +28,6 @@ function loadRadio() {
 /**
  * @param {SVGElement} playButton
  * @param {SVGElement} pauseButton
- * @param {HTMLAudioElement} radio
  * @return {void}
  */
 function toggleButtons(playButton, pauseButton) {
@@ -81,6 +80,7 @@ async function loadNowPlaying() {
     if (data?.now_playing?.song) {
         albumTitle.textContent = data.now_playing.song.artist;
         radioImage.src = data.now_playing.song.art;
+        document.documentElement.style.setProperty('--url-radio', `url('${data.now_playing.song.art}')`);
     }
 
     radioTitle.textContent = data?.now_playing?.song?.title;

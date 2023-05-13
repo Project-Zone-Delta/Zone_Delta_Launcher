@@ -138,6 +138,25 @@
     justify-content: center;
 }
 
+#radioContainer::before {
+    content: "";
+
+    position: absolute;
+
+    height: calc(100vh - 22px);
+    width: 100vw;
+
+    background-image: var(--url-radio);
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    filter: blur(25px);
+
+
+    background-position-x: center;
+    background-position-y: center;
+}
+
 .radio-home-button {
     display: block;
 
