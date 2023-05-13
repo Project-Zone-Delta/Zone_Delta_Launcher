@@ -1,5 +1,7 @@
 :root {
     --url-radio: url('https://i.pinimg.com/736x/7f/0f/37/7f0f376078deb7eddb6698590136014c.jpg');
+    --button-bg-color: #fff;
+    --button-fg-color: #000;
 }
 
 .hidden {
@@ -158,14 +160,14 @@
 }
 
 .radio-home-button {
+    position: relative;
     display: block;
 
-    background: #fff;
+    background: var(--button-bg-color);
+    color: var(--button-fg-color);
 
     border: none;
     border-radius: 25px;
-
-    color: #000;
 
     padding: .3rem .8rem;
     margin: 2rem auto 0;
