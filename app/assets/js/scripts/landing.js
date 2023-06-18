@@ -229,14 +229,14 @@ const refreshServerStatus = async function(fade = false){
     loggerLanding.info('Refreshing Server Status')
     const serv = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer())
 
-    let pLabel = 'SERVER'
-    let pVal = 'OFFLINE'
+    let pLabel = 'SERVEUR'
+    let pVal = 'HORS-LIGNE'
 
     try {
         const serverURL = new URL('my://' + serv.getAddress())
 
         const servStat = await getServerStatus(47, serverURL.hostname, Number(serverURL.port))
-        pLabel = 'PLAYERS'
+        pLabel = 'Joueurs en ligne:'
         pVal = servStat.players.online + '/' + servStat.players.max
 
     } catch (err) {
