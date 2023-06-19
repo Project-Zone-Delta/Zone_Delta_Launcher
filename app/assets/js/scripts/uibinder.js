@@ -19,7 +19,6 @@ const VIEWS = {
     login: '#loginContainer',
     settings: '#settingsContainer',
     welcome: '#welcomeContainer',
-    waiting: '#waitingContainer',
     radio: '#radioContainer'
 }
 

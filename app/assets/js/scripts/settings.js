@@ -339,9 +339,6 @@ settingsNavDone.onclick = () => {
  * Account Management Tab
  */
 
-/*const msftLoginLogger = LoggerUtil.getLogger('Microsoft Login')
-const msftLogoutLogger = LoggerUtil.getLogger('Microsoft Logout')*/
-
 // Bind the add mojang account button.
 document.getElementById('settingsAddMojangAccount').onclick = (e) => {
     switchView(getCurrentView(), VIEWS.login, 500, 500, () => {
@@ -350,102 +347,6 @@ document.getElementById('settingsAddMojangAccount').onclick = (e) => {
         loginCancelEnabled(true)
     })
 }
-
-// Bind the add microsoft account button.
-/* document.getElementById('settingsAddMicrosoftAccount').onclick = (e) => {
-    switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
-        ipcRenderer.send(MSFT_OPCODE.OPEN_LOGIN, VIEWS.settings, VIEWS.settings)
-    })
-}
-
-// Bind reply for Microsoft Login.
-ipcRenderer.on(MSFT_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
-    if (arguments_[0] === MSFT_REPLY_TYPE.ERROR) {
-
-        const viewOnClose = arguments_[2]
-        console.log(arguments_)
-        switchView(getCurrentView(), viewOnClose, 500, 500, () => {
-
-            if(arguments_[1] === MSFT_ERROR.NOT_FINISHED) {
-                // User cancelled.
-                msftLoginLogger.info('Login cancelled by user.')
-                return
-            }
-
-            // Unexpected error.
-            setOverlayContent(
-                'Something Went Wrong',
-                'Microsoft authentication failed. Please try again.',
-                'OK'
-            )
-            setOverlayHandler(() => {
-                toggleOverlay(false)
-            })
-            toggleOverlay(true)
-        })
-    } else if(arguments_[0] === MSFT_REPLY_TYPE.SUCCESS) {
-        const queryMap = arguments_[1]
-        const viewOnClose = arguments_[2]
-
-        // Error from request to Microsoft.
-        if (Object.prototype.hasOwnProperty.call(queryMap, 'error')) {
-            switchView(getCurrentView(), viewOnClose, 500, 500, () => {
-                // TODO Dont know what these errors are. Just show them I guess.
-                // This is probably if you messed up the app registration with Azure.      
-                let error = queryMap.error // Error might be 'access_denied' ?
-                let errorDesc = queryMap.error_description
-                console.log('Error getting authCode, is Azure application registered correctly?')
-                console.log(error)
-                console.log(errorDesc)
-                console.log('Full query map: ', queryMap)
-                setOverlayContent(
-                    error,
-                    errorDesc,
-                    'OK'
-                )
-                setOverlayHandler(() => {
-                    toggleOverlay(false)
-                })
-                toggleOverlay(true)
-
-            })
-        } else {
-
-            msftLoginLogger.info('Acquired authCode, proceeding with authentication.')
-
-            const authCode = queryMap.code
-            AuthManager.addMicrosoftAccount(authCode).then(value => {
-                updateSelectedAccount(value)
-                switchView(getCurrentView(), viewOnClose, 500, 500, () => {
-                    prepareSettings()
-                })
-            })
-                .catch((displayableError) => {
-
-                    let actualDisplayableError
-                    if(isDisplayableError(displayableError)) {
-                        msftLoginLogger.error('Error while logging in.', displayableError)
-                        actualDisplayableError = displayableError
-                    } else {
-                        // Uh oh.
-                        msftLoginLogger.error('Unhandled error during login.', displayableError)
-                        actualDisplayableError = {
-                            title: 'Unknown Error During Login',
-                            desc: 'An unknown error has occurred. Please see the console for details.'
-                        }
-                    }
-
-                    switchView(getCurrentView(), viewOnClose, 500, 500, () => {
-                        setOverlayContent(actualDisplayableError.title, actualDisplayableError.desc, Lang.queryJS('login.tryAgain'))
-                        setOverlayHandler(() => {
-                            toggleOverlay(false)
-                        })
-                        toggleOverlay(true)
-                    })
-                })
-        }
-    }
-}) */
 
 /**
  * Bind functionality for the account selection buttons. If another account
@@ -558,7 +459,6 @@ function refreshAuthAccountSelected(uuid){
     })
 }
 
-/*const settingsCurrentMicrosoftAccounts = document.getElementById('settingsCurrentMicrosoftAccounts')*/
 const settingsCurrentMojangAccounts = document.getElementById('settingsCurrentMojangAccounts')
 
 /**
