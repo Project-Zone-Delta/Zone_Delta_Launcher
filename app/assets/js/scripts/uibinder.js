@@ -16,7 +16,6 @@ let fatalStartupError = false
 // Mapping of each view to their container IDs.
 const VIEWS = {
     landing: '#landingContainer',
-    loginOptions: '#loginOptionsContainer',
     login: '#loginContainer',
     settings: '#settingsContainer',
     welcome: '#welcomeContainer',
@@ -89,10 +88,12 @@ function showMainUI(data){
                 currentView = VIEWS.landing
                 $(VIEWS.landing).fadeIn(1000)
             } else {
-                loginOptionsCancelEnabled(false)
                 loginOptionsViewOnLoginSuccess = VIEWS.landing
                 loginOptionsViewOnLoginCancel = VIEWS.loginOptions
-                currentView = VIEWS.loginOptions
+                switchView(VIEWS.welcome, VIEWS.login, () => {
+                    loginCancelEnabled(false)
+                })
+                //currentView = VIEWS.loginOptions
                 $(VIEWS.loginOptions).fadeIn(1000)
             }
         }

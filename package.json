@@ -13,6 +13,7 @@
   "main": "index.js",
   "scripts": {
     "start": "electron .",
+    "dev": "nodemon --exec npm start",
     "dist": "electron-builder build",
     "dist:win": "npm run dist -- -w",
     "dist:mac": "npm run dist -- -m",
@@ -47,7 +48,8 @@
   "devDependencies": {
     "electron": "^23.0.0",
     "electron-builder": "^23.6.0",
-    "eslint": "^8.34.0"
+    "eslint": "^8.34.0",
+    "nodemon": "^2.0.22"
   },
   "repository": {
     "type": "git",

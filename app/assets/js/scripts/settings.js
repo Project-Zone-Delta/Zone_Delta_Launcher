@@ -525,105 +525,17 @@ function processLogOut(val, isLastAccount) {
             validateSelectedAccount()
         }
         if(isLastAccount) {
-            loginOptionsCancelEnabled(false)
             loginOptionsViewOnLoginSuccess = VIEWS.settings
-            loginOptionsViewOnLoginCancel = VIEWS.loginOptions
-            switchView(getCurrentView(), VIEWS.loginOptions)
+            loginOptionsViewOnLoginCancel = VIEWS.login
+            switchView(getCurrentView(), VIEWS.login, () => {
+                loginCancelEnabled(false)
+            })
         }
     })
     $(parent).fadeOut(250, () => {
         parent.remove()
     })
 }
-
-/* function processLogOut(val, isLastAccount){
-    const parent = val.closest('.settingsAuthAccount')
-    const uuid = parent.getAttribute('uuid')
-    const prevSelAcc = ConfigManager.getSelectedAccount()
-    const targetAcc = ConfigManager.getAuthAccount(uuid)
-    if(targetAcc.type === 'microsoft') {
-        msAccDomElementCache = parent
-        switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
-            ipcRenderer.send(MSFT_OPCODE.OPEN_LOGOUT, uuid, isLastAccount)
-        })
-    } else {
-        AuthManager.removeMojangAccount(uuid).then(() => {
-            if(!isLastAccount && uuid === prevSelAcc.uuid){
-                const selAcc = ConfigManager.getSelectedAccount()
-                refreshAuthAccountSelected(selAcc.uuid)
-                updateSelectedAccount(selAcc)
-                validateSelectedAccount()
-            }
-            if(isLastAccount) {
-                loginOptionsCancelEnabled(false)
-                loginOptionsViewOnLoginSuccess = VIEWS.settings
-                loginOptionsViewOnLoginCancel = VIEWS.loginOptions
-                switchView(getCurrentView(), VIEWS.loginOptions)
-            }
-        })
-        $(parent).fadeOut(250, () => {
-            parent.remove()
-        })
-    }
-}
-
-// Bind reply for Microsoft Logout.
-ipcRenderer.on(MSFT_OPCODE.REPLY_LOGOUT, (_, ...arguments_) => {
-    if (arguments_[0] === MSFT_REPLY_TYPE.ERROR) {
-        switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
-
-            if(arguments_.length > 1 && arguments_[1] === MSFT_ERROR.NOT_FINISHED) {
-                // User cancelled.
-                msftLogoutLogger.info('Logout cancelled by user.')
-                return
-            }
-
-            // Unexpected error.
-            setOverlayContent(
-                'Something Went Wrong',
-                'Microsoft logout failed. Please try again.',
-                'OK'
-            )
-            setOverlayHandler(() => {
-                toggleOverlay(false)
-            })
-            toggleOverlay(true)
-        })
-    } else if(arguments_[0] === MSFT_REPLY_TYPE.SUCCESS) {
-        
-        const uuid = arguments_[1]
-        const isLastAccount = arguments_[2]
-        const prevSelAcc = ConfigManager.getSelectedAccount()
-
-        msftLogoutLogger.info('Logout Successful. uuid:', uuid)
-        
-        AuthManager.removeMicrosoftAccount(uuid)
-            .then(() => {
-                if(!isLastAccount && uuid === prevSelAcc.uuid){
-                    const selAcc = ConfigManager.getSelectedAccount()
-                    refreshAuthAccountSelected(selAcc.uuid)
-                    updateSelectedAccount(selAcc)
-                    validateSelectedAccount()
-                }
-                if(isLastAccount) {
-                    loginOptionsCancelEnabled(false)
-                    loginOptionsViewOnLoginSuccess = VIEWS.settings
-                    loginOptionsViewOnLoginCancel = VIEWS.loginOptions
-                    switchView(getCurrentView(), VIEWS.loginOptions)
-                }
-                if(msAccDomElementCache) {
-                    msAccDomElementCache.remove()
-                    msAccDomElementCache = null
-                }
-            })
-            .finally(() => {
-                if(!isLastAccount) {
-                    switchView(getCurrentView(), VIEWS.settings, 500, 500)
-                }
-            })
-
-    }
-}) */
 
 /**
  * Refreshes the status of the selected account on the auth account
