@@ -2536,6 +2536,7 @@ input:checked + .toggleSwitchSlider:before {
 #newsArticleContentScrollable img,
 #newsArticleContentScrollable iframe {
     max-width: 95%;
+    max-height: 60% !important;
     display: block;
     margin: 0 auto;
 }
