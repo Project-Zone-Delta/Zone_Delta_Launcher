@@ -990,7 +990,7 @@ body, button {
 
 /* Settings navigational divider. */
 .settingsNavDivider {
-    width: 75%;
+    width: 123.75px;
     height: 1px;
     background: rgba(126, 126, 126, 0.57);
     margin-left: auto;
@@ -1420,7 +1420,7 @@ input:checked + .toggleSwitchSlider:before {
     flex-direction: column;
     justify-content: center;
     margin-left: 20px;
-    width: 100%;
+    width: 50px;
 }
 .settingsAuthAccountDetails > *:not(:last-child) {
     margin-bottom: 20px;
@@ -1449,6 +1449,7 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: space-between;
     align-items: flex-end;
     padding: 10px;
+    width: 100%;
 }
 
 /* Account select button shared styles. */
