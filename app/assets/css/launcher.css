@@ -1420,7 +1420,7 @@ input:checked + .toggleSwitchSlider:before {
     flex-direction: column;
     justify-content: center;
     margin-left: 20px;
-    width: 50px;
+    width: 100px;
 }
 .settingsAuthAccountDetails > *:not(:last-child) {
     margin-bottom: 20px;
