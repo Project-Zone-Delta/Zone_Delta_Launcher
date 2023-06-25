@@ -25,6 +25,8 @@ const user_text               = document.getElementById('user_text')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
 
+var in_launching = false
+
 /* Launch Progress Wrapper Functions */
 
 /**
@@ -78,7 +80,7 @@ function setDownloadPercentage(value, max, percent = ((value/max)*100)){
 
 /**
  * Enable or disable the launch button.
- * 
+ *
  * @param {boolean} val True to enable, false to disable.
  */
 function setLaunchEnabled(val){
@@ -87,7 +89,9 @@ function setLaunchEnabled(val){
 
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', function(e){
-    loggerLanding.info('Launching game..')
+    loggerLanding.info('Lancement du jeu...')
+    in_launching = true
+    document.getElementById('launch_button').disabled = "true"
     const mcVersion = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer()).getMinecraftVersion()
     const jExe = ConfigManager.getJavaExecutable(ConfigManager.getSelectedServer())
     if(jExe == null){
@@ -155,7 +159,10 @@ function updateSelectedServer(serv){
     if(getCurrentView() === VIEWS.settings){
         animateSettingsTabRefresh()
     }
-    setLaunchEnabled(serv != null)
+    if(in_launching != true)
+    {
+        setLaunchEnabled(serv != null)
+    }
 }
 // Real text is set in uibinder.js on distributionIndexDone.
 server_selection_button.innerHTML = '\u2022 Loading..'
@@ -703,6 +710,9 @@ function dlAsync(login = true){
                     }
                 }
 
+                in_launching = false
+                document.getElementById('launch_button').disabled = false
+
                 try {
                     // Build Minecraft process.
                     proc = pb.build()
@@ -743,22 +753,22 @@ function dlAsync(login = true){
     // Begin Validations
 
     // Validate Forge files.
-    setLaunchDetails('Loading server information..')
+    setLaunchDetails('Chargement des informations...')
 
     refreshDistributionIndex(true, (data) => {
         onDistroRefresh(data)
         serv = data.getServer(ConfigManager.getSelectedServer())
         aEx.send({task: 'execute', function: 'validateEverything', argsArr: [ConfigManager.getSelectedServer(), DistroManager.isDevMode()]})
     }, (err) => {
-        loggerLaunchSuite.info('Error while fetching a fresh copy of the distribution index.', err)
+        loggerLaunchSuite.info('Une erreur est survenue, lors du listing des données fraîchement récupéré de l\'index.', err)
         refreshDistributionIndex(false, (data) => {
             onDistroRefresh(data)
             serv = data.getServer(ConfigManager.getSelectedServer())
             aEx.send({task: 'execute', function: 'validateEverything', argsArr: [ConfigManager.getSelectedServer(), DistroManager.isDevMode()]})
         }, (err) => {
-            loggerLaunchSuite.error('Unable to refresh distribution index.', err)
+            loggerLaunchSuite.error('Impossible de rafraîchir la distribution de l\'index.', err)
             if(DistroManager.getDistribution() == null){
-                showLaunchFailure('Fatal Error', 'Could not load a copy of the distribution index. See the console (CTRL + Shift + i) for more details.')
+                showLaunchFailure('Erreur fatal', 'Nous ne pouvons pas charger la copie de la distribution de l\'index. Merci de regarder la console pour plus d\'information: CTRL + Shift + i')
 
                 // Disconnect from AssetExec
                 aEx.disconnect()
@@ -809,7 +819,7 @@ function slide_(up){
         lCLLeft.style.top = '-200vh'
         lCLCenter.style.top = '-200vh'
         lCLRight.style.top = '-200vh'
-        newsBtn.style.top = '140vh'
+        newsBtn.style.top = 'calc(130vh + 45px)'
         newsContainer.style.top = '0px'
         //date.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
         //landingContainer.style.background = 'rgba(29, 29, 29, 0.55)'
@@ -870,7 +880,7 @@ let newsLoadingListener = null
  */
 function setNewsLoading(val){
     if(val){
-        const nLStr = 'Checking for News'
+        const nLStr = 'Vérification des articles nouvellement parus.'
         let dotStr = '..'
         nELoadSpan.innerHTML = nLStr + dotStr
         newsLoadingListener = setInterval(() => {
@@ -1074,9 +1084,9 @@ document.addEventListener('keydown', (e) => {
 function displayArticle(articleObject, index){
     newsArticleTitle.innerHTML = articleObject.title
     newsArticleTitle.href = articleObject.link
-    newsArticleAuthor.innerHTML = 'by ' + articleObject.author
+    newsArticleAuthor.innerHTML = 'par ' + articleObject.author
     newsArticleDate.innerHTML = articleObject.date
-    newsArticleComments.innerHTML = articleObject.comments
+    newsArticleComments.innerHTML = articleObject.comments.replace('Comments', 'Commentaires')
     newsArticleComments.href = articleObject.commentsLink
     newsArticleContentScrollable.innerHTML = '<div id="newsArticleContentWrapper"><div class="newsArticleSpacerTop"></div>' + articleObject.content.replace('height=', '') + '<div class="newsArticleSpacerBot"></div></div>'
     Array.from(newsArticleContentScrollable.getElementsByClassName('bbCodeSpoilerButton')).forEach(v => {
@@ -1085,7 +1095,7 @@ function displayArticle(articleObject, index){
             text.style.display = text.style.display === 'block' ? 'none' : 'block'
         }
     })
-    newsNavigationStatus.innerHTML = index + ' of ' + newsArr.length
+    newsNavigationStatus.innerHTML = index + ' sur ' + newsArr.length
     newsContent.setAttribute('article', index-1)
 }
 
