@@ -1410,6 +1410,7 @@ class AssetGuard extends EventEmitter {
             await self.validateClient(versionData)
             await self.validateLogConfig(versionData)
             resolve()
+            console.log(versionData + " " + resolve + " " + reject)
         })
     }
 

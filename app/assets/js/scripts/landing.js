@@ -10,9 +10,9 @@ const { MojangRestAPI, getServerStatus }     = require('helios-core/mojang')
 // Internal Requirements
 const DiscordWrapper          = require('./assets/js/discordwrapper')
 const ProcessBuilder          = require('./assets/js/processbuilder')
-const { Util } = require('./assets/js/assetguard')
+/*const { Util } = require('./assets/js/assetguard')
 const { RestResponseStatus, isDisplayableError } = require('helios-core/common')
-const { stdout } = require('process')
+const { stdout } = require('process')*/
 
 // Launch Elements
 const launch_content          = document.getElementById('launch_content')
@@ -24,6 +24,15 @@ const server_selection_button = document.getElementById('server_selection_button
 const user_text               = document.getElementById('user_text')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
+
+const { Launch } = require('minecraft-java-core');
+const launch = new Launch();
+
+const { AZauth } = require('minecraft-java-core')
+const auth = new AZauth('https://zone-delta.xyz');
+
+const dataDirectory = process.env.APPDATA || (process.platform == 'darwin' ? `${process.env.HOME}/Library/Application Support` : process.env.HOME)
+
 
 var in_launching = false
 
@@ -75,7 +84,7 @@ function setLaunchPercentage(value, max, percent = ((value/max)*100)){
  */
 function setDownloadPercentage(value, max, percent = ((value/max)*100)){
     remote.getCurrentWindow().setProgressBar(value/max)
-    setLaunchPercentage(value, max, percent)
+    setLaunchPercentage(value, max, percent.toFixed(0))
 }
 
 /**
@@ -88,30 +97,103 @@ function setLaunchEnabled(val){
 }
 
 // Bind launch button
-document.getElementById('launch_button').addEventListener('click', function(e){
+document.getElementById('launch_button').addEventListener('click', async function(e){
     loggerLanding.info('Lancement du jeu...')
     in_launching = true
-    document.getElementById('launch_button').disabled = "true"
-    const mcVersion = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer()).getMinecraftVersion()
-    const jExe = ConfigManager.getJavaExecutable(ConfigManager.getSelectedServer())
-    if(jExe == null){
-        asyncSystemScan(mcVersion)
-    } else {
+    setLaunchEnabled(false)
+    toggleLaunchArea(true)
 
-        setLaunchDetails(Lang.queryJS('landing.launch.pleaseWait'))
-        toggleLaunchArea(true)
-        setLaunchPercentage(0, 100)
+    const SelectedServer = ConfigManager.getSelectedServer();
 
-        const jg = new JavaGuard(mcVersion)
-        jg._validateJavaBinary(jExe).then((v) => {
-            loggerLanding.info('Java version meta', v)
-            if(v.valid){
-                dlAsync()
-            } else {
-                asyncSystemScan(mcVersion)
-            }
-        })
+    let mcInfos = await fetch("http://node.zone-delta.xyz:25008/")
+    if (mcInfos.status === 200)
+        mcInfos = await mcInfos.json()
+
+    console.log(mcInfos[`${SelectedServer}`].url)
+    console.log(ConfigManager.getMinRAM(SelectedServer))
+    console.log(ConfigManager.getMaxRAM(SelectedServer))
+    console.log(ConfigManager.getJavaExecutable(SelectedServer))
+
+    let opt = {
+        url: mcInfos[`${SelectedServer}`].url,
+        authenticator: ConfigManager.getSelectedAccount(),
+        timeout: 10000,
+        instance: SelectedServer,
+        path: ConfigManager.getDataDirectory(),
+        version: mcInfos[`${SelectedServer}`].loadder.minecraft_version,
+        detached: ConfigManager.getLaunchDetached(),
+        downloadFileMultiple: 30,
+
+        loader: {
+            type: mcInfos[`${SelectedServer}`].loadder.loadder_type,
+            build: mcInfos[`${SelectedServer}`].loadder.loadder_version,
+            enable: true
+        },
+
+        verify: true,
+        ignored: mcInfos[`${SelectedServer}`].ignored,
+        JVM_ARGS: [],
+        GAME_ARGS: [],
+
+        javaPath: ConfigManager.getJavaExecutable(SelectedServer),
+
+        screen: {
+            width: ConfigManager.getGameWidth(),
+            height: ConfigManager.getGameHeight(),
+            fullscreen: ConfigManager.getFullscreen()
+        },
+
+        memory: {
+            min: ConfigManager.getMinRAM(SelectedServer),
+            max: ConfigManager.getMaxRAM(SelectedServer)
+        }
     }
+    await launch.Launch(opt);
+
+    launch.on('extract', extract => {
+        console.log(extract);
+    });
+
+    launch.on('progress', (progress, size) => {
+        setLaunchDetails(`Téléchargement ${((progress / size) * 100).toFixed(0)}%`)
+        setDownloadPercentage(progress, size)
+    });
+
+    launch.on('check', (progress, size) => {
+        setLaunchDetails(`Vérification ${((progress / size) * 100).toFixed(0)}%`)
+        setDownloadPercentage(progress, size)
+    });
+
+    launch.on('estimated', (time) => {
+        let hours = Math.floor(time / 3600);
+        let minutes = Math.floor((time - hours * 3600) / 60);
+        let seconds = Math.floor(time - hours * 3600 - minutes * 60);
+        console.log(`${hours}h ${minutes}m ${seconds}s`);
+    })
+
+    launch.on('speed', (speed) => {
+        console.log(`${(speed / 1067008).toFixed(2)} Mb/s`)
+    })
+
+    launch.on('patch', patch => {
+        console.log(patch);
+        setLaunchDetails(`Patch en cours...`)
+    });
+
+    launch.on('data', (e) => {
+        toggleLaunchArea(false)
+        setLaunchDetails(`Demarrage en cours...`)
+        console.log(`\x1b[32m[Minecraft]\x1b[0m ${e}`)
+    })
+
+    launch.on('close', code => {
+        setLaunchEnabled(true)
+        toggleLaunchArea(false)
+    });
+
+    launch.on('error', err => {
+        console.log(`\x1b[31m[Minecraft]\x1b[0m ${err}`)
+    });
 })
 
 // Bind settings button
@@ -135,16 +217,16 @@ document.getElementById("radioSettingsButton").onclick = (e) => {
 
 // Bind selected account
 function updateSelectedAccount(authUser){
-    let username = 'No Account Selected'
+    let name = 'No Account Selected'
     if(authUser != null){
-        if(authUser.displayName != null){
-            username = authUser.displayName
+        if(authUser.name != null){
+            name = authUser.name
         }
         if(authUser.uuid != null){
-            document.getElementById('avatarContainer').style.backgroundImage = `url('https://zone-delta.xyz/api/skin-api/avatars/face/${authUser.username}')`
+            document.getElementById('avatarContainer').style.backgroundImage = `url('https://zone-delta.xyz/api/skin-api/avatars/face/${authUser.name}')`
         }
     }
-    user_text.innerHTML = username
+    user_text.innerHTML = name
 }
 updateSelectedAccount(ConfigManager.getSelectedAccount())
 
@@ -170,67 +252,6 @@ server_selection_button.onclick = (e) => {
     e.target.blur()
     toggleServerSelection(true)
 }
-
-// Update Mojang Status Color
-/*const refreshMojangStatuses = async function(){
-    loggerLanding.info('Refreshing Mojang Statuses..')
-
-    let status = 'grey'
-    let tooltipEssentialHTML = ''
-    let tooltipNonEssentialHTML = ''
-
-    const response = await MojangRestAPI.status()
-    let statuses
-    if(response.responseStatus === RestResponseStatus.SUCCESS) {
-        statuses = response.data
-    } else {
-        loggerLanding.warn('Unable to refresh Mojang service status.')
-        statuses = MojangRestAPI.getDefaultStatuses()
-    }
-    
-    greenCount = 0
-    greyCount = 0
-
-    for(let i=0; i<statuses.length; i++){
-        const service = statuses[i]
-
-        if(service.essential){
-            tooltipEssentialHTML += `<div class="mojangStatusContainer">
-                <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex(service.status)};">&#8226;</span>
-                <span class="mojangStatusName">${service.name}</span>
-            </div>`
-        } else {
-            tooltipNonEssentialHTML += `<div class="mojangStatusContainer">
-                <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex(service.status)};">&#8226;</span>
-                <span class="mojangStatusName">${service.name}</span>
-            </div>`
-        }
-
-        if(service.status === 'yellow' && status !== 'red'){
-            status = 'yellow'
-        } else if(service.status === 'red'){
-            status = 'red'
-        } else {
-            if(service.status === 'grey'){
-                ++greyCount
-            }
-            ++greenCount
-        }
-
-    }
-
-    if(greenCount === statuses.length){
-        if(greyCount === statuses.length){
-            status = 'grey'
-        } else {
-            status = 'green'
-        }
-    }
-    
-    document.getElementById('mojangStatusEssentialContainer').innerHTML = tooltipEssentialHTML
-    document.getElementById('mojangStatusNonEssentialContainer').innerHTML = tooltipNonEssentialHTML
-    document.getElementById('mojang_status_icon').style.color = MojangRestAPI.statusToHex(status)
-}*/
 
 const refreshServerStatus = async function(fade = false){
     loggerLanding.info('Refreshing Server Status')
@@ -263,11 +284,6 @@ const refreshServerStatus = async function(fade = false){
     
 }
 
-//refreshMojangStatuses()
-// Server Status is refreshed in uibinder.js on distributionIndexDone.
-
-// Refresh statuses every hour. The status page itself refreshes every day so...
-//let mojangStatusListener = setInterval(() => refreshMojangStatuses(true), 60*60*1000)
 // Set refresh rate to once every 5 minutes.
 let serverStatusListener = setInterval(() => refreshServerStatus(true), 300000)
 
@@ -301,7 +317,7 @@ let extractListener
  * @param {string} mcVersion The Minecraft version we are scanning for.
  * @param {boolean} launchAfter Whether we should begin to launch after scanning. 
  */
-function asyncSystemScan(mcVersion, launchAfter = true){
+/*function asyncSystemScan(mcVersion, launchAfter = true){
 
     setLaunchDetails('Please wait..')
     toggleLaunchArea(true)
@@ -659,12 +675,12 @@ function dlAsync(login = true){
 
             if(login && allGood) {
                 const authUser = ConfigManager.getSelectedAccount()
-                loggerLaunchSuite.info(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
+                loggerLaunchSuite.info(`Sending selected account (${authUser.name}) to ProcessBuilder.`)
                 let pb = new ProcessBuilder(serv, versionData, forgeData, authUser, remote.app.getVersion())
                 setLaunchDetails('Launching game..')
 
                 // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
-                const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} joined the game`)
+                const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.name} joined the game`)
 
                 const onLoadComplete = () => {
                     toggleLaunchArea(false)
@@ -778,7 +794,7 @@ function dlAsync(login = true){
             }
         })
     })
-}
+}*/
 
 /**
  * News Loading Functions

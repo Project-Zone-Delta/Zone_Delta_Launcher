@@ -346,25 +346,12 @@ async function validateSelectedAccount(){
             const accLen = Object.keys(ConfigManager.getAuthAccounts()).length
             setOverlayContent(
                 'Failed to Refresh Login',
-                `We were unable to refresh the login for <strong>${selectedAcc.displayName}</strong>. Please ${accLen > 0 ? 'select another account or ' : ''} login again.`,
+                `We were unable to refresh the login for <strong>${selectedAcc.name}</strong>. Please ${accLen > 0 ? 'select another account or ' : ''} login again.`,
                 'Login',
                 'Select Another Account'
             )
             setOverlayHandler(() => {
-
-                /**const isMicrosoft = selectedAcc.type === 'microsoft'
-
-                if(isMicrosoft) {
-                    // Empty for now
-                } else {
-                    // Mojang
-                    // For convenience, pre-populate the username of the account.
-                    document.getElementById('loginUsername').value = selectedAcc.username
-                    validateEmail(selectedAcc.username)
-                }*/
-
-                //document.getElementById('loginUsername').value = selectedAcc.username
-                validateEmail(selectedAcc.username)
+                validateEmail(selectedAcc.name)
                 
                 loginOptionsViewOnLoginSuccess = getCurrentView()
                 loginOptionsViewOnLoginCancel = VIEWS.loginOptions
@@ -372,20 +359,7 @@ async function validateSelectedAccount(){
                 if(accLen > 0) {
                     loginOptionsViewOnCancel = getCurrentView()
                     loginOptionsViewCancelHandler = () => {
-                        /*if(isMicrosoft) {
-                            ConfigManager.addMicrosoftAuthAccount(
-                                selectedAcc.uuid,
-                                selectedAcc.accessToken,
-                                selectedAcc.username,
-                                selectedAcc.expiresAt,
-                                selectedAcc.microsoft.access_token,
-                                selectedAcc.microsoft.refresh_token,
-                                selectedAcc.microsoft.expires_at
-                            )
-                        } else {
-                            ConfigManager.addMojangAuthAccount(selectedAcc.uuid, selectedAcc.accessToken, selectedAcc.username, selectedAcc.displayName)
-                        }*/
-                        ConfigManager.addAzAuthAccount(selectedAcc.uuid, selectedAcc.accessToken, selectedAcc.username, selectedAcc.displayName)
+                        ConfigManager.addAzAuthAccount(selectedAcc)
                         ConfigManager.save()
                         validateSelectedAccount()
                     }

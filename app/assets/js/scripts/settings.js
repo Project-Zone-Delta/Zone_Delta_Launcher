@@ -2,7 +2,7 @@
 const os     = require('os')
 const semver = require('semver')
 
-const { JavaGuard } = require('./assets/js/assetguard')
+const { JavaGuard, Util } = require('./assets/js/assetguard')
 const DropinModUtil  = require('./assets/js/dropinmodutil')
 /* const { MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR } = require('./assets/js/ipcconstants') */
 
@@ -480,13 +480,13 @@ function populateAuthAccounts(){
 
         const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
             <div class="settingsAuthAccountLeft">
-                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://zone-delta.xyz/api/skin-api/avatars/face/${acc.username}">
+                <img class="settingsAuthAccountImage" alt="${acc.name}" src="https://zone-delta.xyz/api/skin-api/avatars/face/${acc.username}">
             </div>
             <div class="settingsAuthAccountRight">
                 <div class="settingsAuthAccountDetails">
                     <div class="settingsAuthAccountDetailPane">
                         <div class="settingsAuthAccountDetailTitle">Nom du compte</div>
-                        <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
+                        <div class="settingsAuthAccountDetailValue">${acc.name}</div>
                     </div>
                     <div class="settingsAuthAccountDetailPane">
                         <div class="settingsAuthAccountDetailTitle">UUID</div>
