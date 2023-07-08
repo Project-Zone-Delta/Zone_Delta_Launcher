@@ -323,7 +323,6 @@ function settingsSaveDisabled(v){
 
 function fullSettingsSave() {
     saveSettingsValues()
-    saveModConfiguration()
     ConfigManager.save()
     saveDropinModConfiguration()
     saveShaderpackSettings()
@@ -655,19 +654,19 @@ function bindModsToggleSwitch(){
 /**
  * Save the mod configuration based on the UI values.
  */
-function saveModConfiguration(){
+/*function saveModConfiguration(){
     const serv = ConfigManager.getSelectedServer()
     const modConf = ConfigManager.getModConfiguration(serv)
     modConf.mods = _saveModConfiguration(modConf.mods)
     ConfigManager.setModConfiguration(serv, modConf)
-}
+}*/
 
 /**
  * Recursively save mod config with submods.
  * 
  * @param {Object} modConf Mod config object to save.
  */
-function _saveModConfiguration(modConf){
+/*function _saveModConfiguration(modConf){
     for(let m of Object.entries(modConf)){
         const tSwitch = settingsModsContainer.querySelectorAll(`[formod='${m[0]}']`)
         if(!tSwitch[0].hasAttribute('dropin')){
@@ -684,7 +683,7 @@ function _saveModConfiguration(modConf){
         }
     }
     return modConf
-}
+}*/
 
 // Drop-in mod elements.
 
@@ -703,21 +702,14 @@ function resolveDropinModsForUI(){
     let dropinMods = ''
 
     for(dropin of CACHE_DROPIN_MODS){
-        dropinMods += `<div id="${dropin.fullName}" class="settingsBaseMod settingsDropinMod" ${!dropin.disabled ? 'enabled' : ''}>
+        dropinMods += `<div id="${dropin.fullName}" class="settingsBaseMod settingsDropinMod enabled"}>
                     <div class="settingsModContent">
                         <div class="settingsModMainWrapper">
                             <div class="settingsModStatus"></div>
                             <div class="settingsModDetails">
                                 <span class="settingsModName">${dropin.name}</span>
-                                <div class="settingsDropinRemoveWrapper">
-                                    <button class="settingsDropinRemoveButton" remmod="${dropin.fullName}">Remove</button>
-                                </div>
                             </div>
                         </div>
-                        <label class="toggleSwitch">
-                            <input type="checkbox" formod="${dropin.fullName}" dropin ${!dropin.disabled ? 'checked' : ''}>
-                            <span class="toggleSwitchSlider"></span>
-                        </label>
                     </div>
                 </div>`
     }
@@ -747,37 +739,6 @@ function bindDropinModsRemoveButton(){
             }
         }
     })
-}
-
-/**
- * Bind functionality to the file system button for the selected
- * server configuration.
- */
-function bindDropinModFileSystemButton(){
-    const fsBtn = document.getElementById('settingsDropinFileSystemButton')
-    fsBtn.onclick = () => {
-        DropinModUtil.validateDir(CACHE_SETTINGS_MODS_DIR)
-        shell.openPath(CACHE_SETTINGS_MODS_DIR)
-    }
-    fsBtn.ondragenter = e => {
-        e.dataTransfer.dropEffect = 'move'
-        fsBtn.setAttribute('drag', '')
-        e.preventDefault()
-    }
-    fsBtn.ondragover = e => {
-        e.preventDefault()
-    }
-    fsBtn.ondragleave = e => {
-        fsBtn.removeAttribute('drag')
-    }
-
-    fsBtn.ondrop = e => {
-        fsBtn.removeAttribute('drag')
-        e.preventDefault()
-
-        DropinModUtil.addDropinMods(e.dataTransfer.files, CACHE_SETTINGS_MODS_DIR)
-        reloadDropinMods()
-    }
 }
 
 /**
@@ -821,7 +782,6 @@ document.addEventListener('keydown', (e) => {
 function reloadDropinMods(){
     resolveDropinModsForUI()
     bindDropinModsRemoveButton()
-    bindDropinModFileSystemButton()
     bindModsToggleSwitch()
 }
 
@@ -950,7 +910,6 @@ Array.from(document.getElementsByClassName('settingsSwitchServerButton')).forEac
  * Save mod configuration for the current selected server.
  */
 function saveAllModConfigurations(){
-    saveModConfiguration()
     ConfigManager.save()
     saveDropinModConfiguration()
 }
@@ -974,7 +933,6 @@ function prepareModsTab(first){
     resolveDropinModsForUI()
     resolveShaderpacksForUI()
     bindDropinModsRemoveButton()
-    bindDropinModFileSystemButton()
     bindShaderpackButton()
     bindModsToggleSwitch()
     loadSelectedServerOnModsTab()
