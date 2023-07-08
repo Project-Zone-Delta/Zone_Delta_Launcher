@@ -229,10 +229,9 @@ class DistroIndex {
     }
 
     _resolveMainServer(){
-
         for(let serv of this.servers){
             if(serv.mainServer){
-                this.mainServer = serv.id
+                this.mainServer = serv.name
                 return
             }
         }
