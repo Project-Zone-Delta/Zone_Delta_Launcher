@@ -11,7 +11,6 @@
 // Requirements
 const ConfigManager                     = require('./configmanager')
 const { LoggerUtil }                    = require('helios-core')
-const { RestResponseStatus }            = require('helios-core/common')
 
 //const azAuth = require('azuriom-auth')
 const { AZauth } = require('minecraft-java-core')
@@ -49,45 +48,6 @@ exports.addMojangAccount = async function(email, password, a2f) {
     ConfigManager.save()
 
     return ret
-}
-
-const AUTH_MODE                         = { FULL: 0, MS_REFRESH: 1, MC_REFRESH: 2 }
-
-/**
- * Calculate the expiry date. Advance the expiry time by 10 seconds
- * to reduce the liklihood of working with an expired token.
- * 
- * @param {number} nowMs Current time milliseconds.
- * @param {number} epiresInS Expires in (seconds)
- * @returns 
- */
-function calculateExpiryDate(nowMs, epiresInS) {
-    return nowMs + ((epiresInS-10)*1000)
-}
-
-/**
- * Remove a Mojang account. This will invalidate the access token associated
- * with the account and then remove it from the database.
- * 
- * @param {string} uuid The UUID of the account to be removed.
- * @returns {Promise.<void>} Promise which resolves to void when the action is complete.
- */
-exports.removeMojangAccount = async function(uuid){
-    try {
-        const authAcc                   = ConfigManager.getAuthAccount(uuid)
-        const response                  = await MojangRestAPI.invalidate(authAcc.accessToken, ConfigManager.getClientToken())
-        if(response.responseStatus === RestResponseStatus.SUCCESS) {
-            ConfigManager.removeAuthAccount(uuid)
-            ConfigManager.save()
-            return Promise.resolve()
-        } else {
-            log.error('Error while removing account', response.error)
-            return Promise.reject(response.error)
-        }
-    } catch (err){
-        log.error('Error while removing account', err)
-        return Promise.reject(err)
-    }
 }
 
 /**

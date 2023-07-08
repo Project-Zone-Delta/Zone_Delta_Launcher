@@ -107,219 +107,6 @@ class Required {
 exports.Required
 
 /**
- * Represents a module.
- */
-class Module {
-
-    /**
-     * Parse a JSON object into a Module.
-     * 
-     * @param {Object} json A JSON object representing a Module.
-     * @param {string} serverid The ID of the server to which this module belongs.
-     * 
-     * @returns {Module} The parsed Module.
-     */
-    static fromJSON(json, serverid){
-        return new Module(json.id, json.name, json.type, json.classpath, json.required, json.artifact, json.subModules, serverid)
-    }
-
-    /**
-     * Resolve the default extension for a specific module type.
-     * 
-     * @param {string} type The type of the module.
-     * 
-     * @return {string} The default extension for the given type.
-     */
-    static _resolveDefaultExtension(type){
-        switch (type) {
-            case exports.Types.Library:
-            case exports.Types.ForgeHosted:
-            case exports.Types.LiteLoader:
-            case exports.Types.ForgeMod:
-                return 'jar'
-            case exports.Types.LiteMod:
-                return 'litemod'
-            case exports.Types.File:
-            default:
-                return 'jar' // There is no default extension really.
-        }
-    }
-
-    constructor(id, name, type, classpath, required, artifact, subModules, serverid) {
-        this.identifier = id
-        this.type = type
-        this.classpath = classpath
-        this._resolveMetaData()
-        this.name = name
-        this.required = Required.fromJSON(required)
-        this.artifact = Artifact.fromJSON(artifact)
-        this._resolveArtifactPath(artifact.path, serverid)
-        this._resolveSubModules(subModules, serverid)
-    }
-
-    _resolveMetaData(){
-        try {
-
-            const m0 = this.identifier.split('@')
-
-            this.artifactExt = m0[1] || Module._resolveDefaultExtension(this.type)
-
-            const m1 = m0[0].split(':')
-
-            this.artifactClassifier = m1[3] || undefined
-            this.artifactVersion = m1[2] || '???'
-            this.artifactID = m1[1] || '???'
-            this.artifactGroup = m1[0] || '???'
-
-        } catch (err) {
-            // Improper identifier
-            logger.error('Improper ID for module', this.identifier, err)
-        }
-    }
-
-    _resolveArtifactPath(artifactPath, serverid){
-        const pth = artifactPath == null ? path.join(...this.getGroup().split('.'), this.getID(), this.getVersion(), `${this.getID()}-${this.getVersion()}${this.artifactClassifier != undefined ? `-${this.artifactClassifier}` : ''}.${this.getExtension()}`) : artifactPath
-
-        switch (this.type){
-            case exports.Types.Library:
-            case exports.Types.ForgeHosted:
-            case exports.Types.LiteLoader:
-                this.artifact.path = path.join(ConfigManager.getCommonDirectory(), 'libraries', pth)
-                break
-            case exports.Types.ForgeMod:
-            case exports.Types.LiteMod:
-                this.artifact.path = path.join(ConfigManager.getCommonDirectory(), 'modstore', pth)
-                break
-            case exports.Types.VersionManifest:
-                this.artifact.path = path.join(ConfigManager.getCommonDirectory(), 'versions', this.getIdentifier(), `${this.getIdentifier()}.json`)
-                break
-            case exports.Types.File:
-            default:
-                this.artifact.path = path.join(ConfigManager.getInstanceDirectory(), serverid, pth)
-                break
-        }
-
-    }
-
-    _resolveSubModules(json, serverid){
-        const arr = []
-        if(json != null){
-            for(let sm of json){
-                arr.push(Module.fromJSON(sm, serverid))
-            }
-        }
-        this.subModules = arr.length > 0 ? arr : null
-    }
-
-    /**
-     * @returns {string} The full, unparsed module identifier.
-     */
-    getIdentifier(){
-        return this.identifier
-    }
-
-    /**
-     * @returns {string} The name of the module.
-     */
-    getName(){
-        return this.name
-    }
-
-    /**
-     * @returns {Required} The required object declared by this module.
-     */
-    getRequired(){
-        return this.required
-    }
-
-    /**
-     * @returns {Artifact} The artifact declared by this module.
-     */
-    getArtifact(){
-        return this.artifact
-    }
-
-    /**
-     * @returns {string} The maven identifier of this module's artifact.
-     */
-    getID(){
-        return this.artifactID
-    }
-
-    /**
-     * @returns {string} The maven group of this module's artifact.
-     */
-    getGroup(){
-        return this.artifactGroup
-    }
-
-    /**
-     * @returns {string} The identifier without he version or extension.
-     */
-    getVersionlessID(){
-        return this.getGroup() + ':' + this.getID()
-    }
-
-    /**
-     * @returns {string} The identifier without the extension.
-     */
-    getExtensionlessID(){
-        return this.getIdentifier().split('@')[0]
-    }
-
-    /**
-     * @returns {string} The version of this module's artifact.
-     */
-    getVersion(){
-        return this.artifactVersion
-    }
-
-    /**
-     * @returns {string} The classifier of this module's artifact
-     */
-    getClassifier(){
-        return this.artifactClassifier
-    }
-
-    /**
-     * @returns {string} The extension of this module's artifact.
-     */
-    getExtension(){
-        return this.artifactExt
-    }
-
-    /**
-     * @returns {boolean} Whether or not this module has sub modules.
-     */
-    hasSubModules(){
-        return this.subModules != null
-    }
-
-    /**
-     * @returns {Array.<Module>} An array of sub modules.
-     */
-    getSubModules(){
-        return this.subModules
-    }
-
-    /**
-     * @returns {string} The type of the module.
-     */
-    getType(){
-        return this.type
-    }
-
-    /**
-     * @returns {boolean} Whether or not this library should be on the classpath.
-     */
-    getClasspath(){
-        return this.classpath ?? true
-    }
-
-}
-exports.Module
-
-/**
  * Represents a server configuration.
  */
 class Server {
@@ -333,35 +120,23 @@ class Server {
      */
     static fromJSON(json){
 
-        const mdls = json.modules
-        json.modules = []
-
         const serv = Object.assign(new Server(), json)
-        serv._resolveModules(mdls)
 
         return serv
-    }
-
-    _resolveModules(json){
-        const arr = []
-        for(let m of json){
-            arr.push(Module.fromJSON(m, this.getID()))
-        }
-        this.modules = arr
     }
 
     /**
      * @returns {string} The ID of the server.
      */
     getID(){
-        return this.id
+        return this.name
     }
 
     /**
      * @returns {string} The name of the server.
      */
     getName(){
-        return this.name
+        return this.displayName
     }
 
     /**
@@ -396,7 +171,7 @@ class Server {
      * @returns {string} The minecraft version of the server.
      */
     getMinecraftVersion(){
-        return this.minecraftVersion
+        return this.loadder.minecraft_version
     }
 
     /**
@@ -416,13 +191,9 @@ class Server {
         return this.autoconnect
     }
 
-    /**
-     * @returns {Array.<Module>} An array of modules for this server.
-     */
-    getModules(){
-        return this.modules
+    getThis() {
+        return this;
     }
-
 }
 exports.Server
 
@@ -441,19 +212,19 @@ class DistroIndex {
     static fromJSON(json){
 
         const servers = json.servers
-        json.servers = []
 
         const distro = Object.assign(new DistroIndex(), json)
-        distro._resolveServers(servers)
+        console.log(servers)
+        distro._resolveServers(json, servers)
         distro._resolveMainServer()
 
         return distro
     }
 
-    _resolveServers(json){
+    _resolveServers(data, json){
         const arr = []
-        for(let s of json){
-            arr.push(Server.fromJSON(s))
+        for(let i = 0 ; i < json.length; i++){
+            arr.push(Server.fromJSON(data[json[i]]))
         }
         this.servers = arr
     }
@@ -502,7 +273,7 @@ class DistroIndex {
      */
     getServer(id){
         for(let serv of this.servers){
-            if(serv.id === id){
+            if(serv.name === id){
                 return serv
             }
         }
@@ -543,59 +314,20 @@ let data = null
  * @returns {Promise.<DistroIndex>}
  */
 exports.pullRemote = function(){
-    if(DEV_MODE){
-        return exports.pullLocal()
-    }
-    return new Promise((resolve, reject) => {
-        const distroURL = 'https://download.zone-delta.xyz/distribution.json'
-        //const distroURL = 'https://gist.githubusercontent.com/dscalzi/53b1ba7a11d26a5c353f9d5ae484b71b/raw/'
-        const opts = {
-            url: distroURL,
-            timeout: 2500
-        }
-        const distroDest = path.join(ConfigManager.getLauncherDirectory(), 'distribution.json')
-        request(opts, (error, resp, body) => {
-            if(!error){
-                
-                try {
-                    data = DistroIndex.fromJSON(JSON.parse(body))
-                } catch (e) {
-                    reject(e)
-                    return
-                }
+    
+    return new Promise(async (resolve, reject) => {
+        const distroURL = 'http://node.zone-delta.xyz:25008/'
 
-                fs.writeFile(distroDest, body, 'utf-8', (err) => {
-                    if(!err){
-                        resolve(data)
-                        return
-                    } else {
-                        reject(err)
-                        return
-                    }
-                })
-            } else {
-                reject(error)
-                return
-            }
-        })
-    })
-}
+        let distroInfos
+        const distro = await fetch(distroURL)
+        
+        distroInfos = await distro.json()
 
-/**
- * @returns {Promise.<DistroIndex>}
- */
-exports.pullLocal = function(){
-    return new Promise((resolve, reject) => {
-        fs.readFile(DEV_MODE ? DEV_PATH : DISTRO_PATH, 'utf-8', (err, d) => {
-            if(!err){
-                data = DistroIndex.fromJSON(JSON.parse(d))
-                resolve(data)
-                return
-            } else {
-                reject(err)
-                return
-            }
-        })
+        data = DistroIndex.fromJSON(distroInfos)
+        console.log(data)
+
+        resolve(data)
+        return
     })
 }
 

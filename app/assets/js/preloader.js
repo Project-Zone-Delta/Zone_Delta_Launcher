@@ -21,8 +21,11 @@ LangLoader.loadLanguage('en_US')
 function onDistroLoad(data){
     if(data != null){
         
+        console.log(data)
+        console.log(data["zone-delta-1.12.2"])
+        console.log(data.getMainServer())
         // Resolve the selected server if its value has yet to be set.
-        if(ConfigManager.getSelectedServer() == null || data.getServer(ConfigManager.getSelectedServer()) == null){
+        if(ConfigManager.getSelectedServer() == null || data[ConfigManager.getSelectedServer()] == null){
             logger.info('Determining default selected server..')
             ConfigManager.setSelectedServer(data.getMainServer().getID())
             ConfigManager.save()
@@ -35,6 +38,10 @@ function onDistroLoad(data){
 DistroManager.pullRemote().then((data) => {
     logger.info('Loaded distribution index.')
 
+    console.log(data) 
+    console.log(data.getServers()) 
+    console.log(data.getMainServer())
+
     onDistroLoad(data)
 
 }).catch((err) => {
@@ -42,8 +49,10 @@ DistroManager.pullRemote().then((data) => {
     logger.error(err)
 
     logger.info('Attempting to load an older version of the distribution index.')
+    onDistroLoad(null)
+
     // Try getting a local copy, better than nothing.
-    DistroManager.pullLocal().then((data) => {
+    /*DistroManager.pullLocal().then((data) => {
         logger.info('Successfully loaded an older version of the distribution index.')
 
         onDistroLoad(data)
@@ -57,7 +66,7 @@ DistroManager.pullRemote().then((data) => {
 
         onDistroLoad(null)
 
-    })
+    })*/
 
 })
 

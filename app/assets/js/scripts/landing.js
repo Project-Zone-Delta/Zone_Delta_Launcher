@@ -5,14 +5,10 @@
 const cp                      = require('child_process')
 const crypto                  = require('crypto')
 const { URL }                 = require('url')
-const { MojangRestAPI, getServerStatus }     = require('helios-core/mojang')
+const { getServerStatus }     = require('helios-core/mojang')
 
 // Internal Requirements
 const DiscordWrapper          = require('./assets/js/discordwrapper')
-const ProcessBuilder          = require('./assets/js/processbuilder')
-/*const { Util } = require('./assets/js/assetguard')
-const { RestResponseStatus, isDisplayableError } = require('helios-core/common')
-const { stdout } = require('process')*/
 
 // Launch Elements
 const launch_content          = document.getElementById('launch_content')
@@ -27,12 +23,6 @@ const loggerLanding = LoggerUtil.getLogger('Landing')
 
 const { Launch } = require('minecraft-java-core');
 const launch = new Launch();
-
-const { AZauth } = require('minecraft-java-core')
-const auth = new AZauth('https://zone-delta.xyz');
-
-const dataDirectory = process.env.APPDATA || (process.platform == 'darwin' ? `${process.env.HOME}/Library/Application Support` : process.env.HOME)
-
 
 var in_launching = false
 
@@ -108,11 +98,6 @@ document.getElementById('launch_button').addEventListener('click', async functio
     let mcInfos = await fetch("http://node.zone-delta.xyz:25008/")
     if (mcInfos.status === 200)
         mcInfos = await mcInfos.json()
-
-    console.log(mcInfos[`${SelectedServer}`].url)
-    console.log(ConfigManager.getMinRAM(SelectedServer))
-    console.log(ConfigManager.getMaxRAM(SelectedServer))
-    console.log(ConfigManager.getJavaExecutable(SelectedServer))
 
     let opt = {
         url: mcInfos[`${SelectedServer}`].url,

@@ -146,14 +146,14 @@ function onDistroRefresh(data){
  * 
  * @param {Object} data The distro index object.
  */
-function syncModConfigurations(data){
+/**function syncModConfigurations(data){
 
     const syncedCfgs = []
 
     for(let serv of data.getServers()){
 
         const id = serv.getID()
-        const mdls = serv.getModules()
+        //const mdls = serv.getModules()
         const cfg = ConfigManager.getModConfiguration(id)
 
         if(cfg != null){
@@ -161,7 +161,7 @@ function syncModConfigurations(data){
             const modsOld = cfg.mods
             const mods = {}
 
-            for(let mdl of mdls){
+            /*for(let mdl of mdls){
                 const type = mdl.getType()
 
                 if(type === DistroManager.Types.ForgeMod || type === DistroManager.Types.LiteMod || type === DistroManager.Types.LiteLoader){
@@ -186,18 +186,18 @@ function syncModConfigurations(data){
                         }
                     }
                 }
-            }
+            }*/
 
-            syncedCfgs.push({
+/*            syncedCfgs.push({
                 id,
                 mods
             })
 
         } else {
 
-            const mods = {}
+            const mods = {}*/
 
-            for(let mdl of mdls){
+            /*for(let mdl of mdls){
                 const type = mdl.getType()
                 if(type === DistroManager.Types.ForgeMod || type === DistroManager.Types.LiteMod || type === DistroManager.Types.LiteLoader){
                     if(!mdl.getRequired().isRequired()){
@@ -211,9 +211,9 @@ function syncModConfigurations(data){
                         }
                     }
                 }
-            }
+            }*/
 
-            syncedCfgs.push({
+/*            syncedCfgs.push({
                 id,
                 mods
             })
@@ -223,7 +223,7 @@ function syncModConfigurations(data){
 
     ConfigManager.setModConfigurations(syncedCfgs)
     ConfigManager.save()
-}
+}*/
 
 /**
  * Ensure java configurations are present for the available servers.
@@ -233,7 +233,12 @@ function syncModConfigurations(data){
 function ensureJavaSettings(data) {
 
     // Nothing too fancy for now.
+
+    console.log(data)
+    let servInfos
+
     for(const serv of data.getServers()){
+        console.log(serv)
         ConfigManager.ensureJavaConfig(serv.getID(), serv.getMinecraftVersion())
     }
 
@@ -428,7 +433,9 @@ document.addEventListener('readystatechange', function(){
 ipcRenderer.on('distributionIndexDone', (event, res) => {
     if(res) {
         const data = DistroManager.getDistribution()
-        syncModConfigurations(data)
+        //syncModConfigurations(data)
+        console.log(res)
+        console.log(data)
         ensureJavaSettings(data)
         if(document.readyState === 'interactive' || document.readyState === 'complete'){
             showMainUI(data)

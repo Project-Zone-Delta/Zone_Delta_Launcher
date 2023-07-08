@@ -556,10 +556,10 @@ function resolveModsForUI(){
     const distro = DistroManager.getDistribution()
     const servConf = ConfigManager.getModConfiguration(serv)
 
-    const modStr = parseModulesForUI(distro.getServer(serv).getModules(), false, servConf.mods)
+    //const modStr = parseModulesForUI(distro.getServer(serv).getModules(), false, servConf.mods)
 
-    document.getElementById('settingsReqModsContent').innerHTML = modStr.reqMods
-    document.getElementById('settingsOptModsContent').innerHTML = modStr.optMods
+    //document.getElementById('settingsReqModsContent').innerHTML = modStr.reqMods
+    //document.getElementById('settingsOptModsContent').innerHTML = modStr.optMods
 }
 
 /**
