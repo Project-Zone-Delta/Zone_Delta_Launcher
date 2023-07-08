@@ -479,7 +479,7 @@ function populateAuthAccounts(){
 
         const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
             <div class="settingsAuthAccountLeft">
-                <img class="settingsAuthAccountImage" alt="${acc.name}" src="https://zone-delta.xyz/api/skin-api/avatars/face/${acc.username}">
+                <img class="settingsAuthAccountImage" alt="${acc.name}" src="https://zone-delta.xyz/api/skin-api/avatars/face/${acc.name}">
             </div>
             <div class="settingsAuthAccountRight">
                 <div class="settingsAuthAccountDetails">

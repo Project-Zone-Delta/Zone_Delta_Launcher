@@ -1439,6 +1439,7 @@ input:checked + .toggleSwitchSlider:before {
 }
 .settingsAuthAccountDetailValue {
     font-size: 14px;
+    white-space: nowrap;
     -webkit-user-select: initial;
 }
 
