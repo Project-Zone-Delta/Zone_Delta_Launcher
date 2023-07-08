@@ -233,12 +233,9 @@ function onDistroRefresh(data){
 function ensureJavaSettings(data) {
 
     // Nothing too fancy for now.
-
-    console.log(data)
     let servInfos
 
     for(const serv of data.getServers()){
-        console.log(serv)
         ConfigManager.ensureJavaConfig(serv.getID(), serv.getMinecraftVersion())
     }
 
@@ -434,8 +431,6 @@ ipcRenderer.on('distributionIndexDone', (event, res) => {
     if(res) {
         const data = DistroManager.getDistribution()
         //syncModConfigurations(data)
-        console.log(res)
-        console.log(data)
         ensureJavaSettings(data)
         if(document.readyState === 'interactive' || document.readyState === 'complete'){
             showMainUI(data)

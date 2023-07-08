@@ -214,7 +214,6 @@ class DistroIndex {
         const servers = json.servers
 
         const distro = Object.assign(new DistroIndex(), json)
-        console.log(servers)
         distro._resolveServers(json, servers)
         distro._resolveMainServer()
 
@@ -324,7 +323,6 @@ exports.pullRemote = function(){
         distroInfos = await distro.json()
 
         data = DistroIndex.fromJSON(distroInfos)
-        console.log(data)
 
         resolve(data)
         return

@@ -21,9 +21,6 @@ LangLoader.loadLanguage('en_US')
 function onDistroLoad(data){
     if(data != null){
         
-        console.log(data)
-        console.log(data["zone-delta-1.12.2"])
-        console.log(data.getMainServer())
         // Resolve the selected server if its value has yet to be set.
         if(ConfigManager.getSelectedServer() == null || data[ConfigManager.getSelectedServer()] == null){
             logger.info('Determining default selected server..')
@@ -37,10 +34,6 @@ function onDistroLoad(data){
 // Ensure Distribution is downloaded and cached.
 DistroManager.pullRemote().then((data) => {
     logger.info('Loaded distribution index.')
-
-    console.log(data) 
-    console.log(data.getServers()) 
-    console.log(data.getMainServer())
 
     onDistroLoad(data)
 
