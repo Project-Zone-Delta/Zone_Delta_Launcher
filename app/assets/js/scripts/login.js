@@ -7,6 +7,7 @@ const basicEmail = /^\S+@\S+\.\S+$/
 //const validEmail          = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 
 // Login Elements
+const { isDisplayableError } = require('helios-core/common')
 const loginCancelContainer = document.getElementById('loginCancelContainer')
 const loginCancelButton = document.getElementById('loginCancelButton')
 const loginEmailError = document.getElementById('loginEmailError')
@@ -232,6 +233,7 @@ function login(email, password, a2f) {
         }, 1000)
     }).catch((displayableError) => {
         loginLoading(false)
+        formDisabled(false)
 
         let actualDisplayableError
         if (isDisplayableError(displayableError)) {
@@ -243,6 +245,13 @@ function login(email, password, a2f) {
             actualDisplayableError = {
                 title: 'Erreur inconnue pendant la connexion',
                 desc: 'Une erreur inconnue s\'est produite. Veuillez consulter la console pour plus de détails.'
+            }
+        }
+        
+        if(displayableError.reason == 'invalid_credentials') {
+            actualDisplayableError = {
+                title: 'Identifiants invalides',
+                desc: 'Veuillez vérifier vos identifiants et réessayer.'
             }
         }
 

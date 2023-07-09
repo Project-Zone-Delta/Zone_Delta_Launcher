@@ -42,7 +42,7 @@ exports.addMojangAccount = async function(email, password, a2f) {
         return {needA2F: true}
 
     if (result.error) 
-        throw 'Unexpected result: ' + JSON.stringify(result)
+        throw result
     
     const ret = ConfigManager.addAzAuthAccount(result)
     ConfigManager.save()
