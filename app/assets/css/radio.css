@@ -85,7 +85,7 @@
 .slider input {
     position: absolute;
     left: 1px;
-    top: 4px;
+    top: 2.5px;
     width: 195px;
     height: 20px;
     -webkit-appearance: none;
@@ -130,6 +130,8 @@
     margin: 10px;
     text-align: center;
     padding-right: 10px;
+    position: relative;
+    top: 5px;
 }
 
 #radioContainer {

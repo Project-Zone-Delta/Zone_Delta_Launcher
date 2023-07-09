@@ -448,12 +448,12 @@ function refreshAuthAccountSelected(uuid){
         const selBtn = val.getElementsByClassName('settingsAuthAccountSelect')[0]
         if(uuid === val.getAttribute('uuid')){
             selBtn.setAttribute('selected', '')
-            selBtn.innerHTML = 'Selected Account &#10004;'
+            selBtn.innerHTML = 'Compte sélectionné &#10004;'
         } else {
             if(selBtn.hasAttribute('selected')){
                 selBtn.removeAttribute('selected')
             }
-            selBtn.innerHTML = 'Select Account'
+            selBtn.innerHTML = 'Sélectionner un compte'
         }
     })
 }
@@ -890,7 +890,7 @@ function loadSelectedServerOnModsTab(){
                             <path class="cls-1" d="M100.93,65.54C89,62,68.18,55.65,63.54,52.13c2.7-5.23,18.8-19.2,28-27.55C81.36,31.74,63.74,43.87,58.09,45.3c-2.41-5.37-3.61-26.52-4.37-39-.77,12.46-2,33.64-4.36,39-5.7-1.46-23.3-13.57-33.49-20.72,9.26,8.37,25.39,22.36,28,27.55C39.21,55.68,18.47,62,6.52,65.55c12.32-2,33.63-6.06,39.34-4.9-.16,5.87-8.41,26.16-13.11,37.69,6.1-10.89,16.52-30.16,21-33.9,4.5,3.79,14.93,23.09,21,34C70,86.84,61.73,66.48,61.59,60.65,67.36,59.49,88.64,63.52,100.93,65.54Z"/>
                             <circle class="cls-2" cx="53.73" cy="53.9" r="38"/>
                         </svg>
-                        <span class="serverListingStarTooltip">Main Server</span>
+                        <span class="serverListingStarTooltip">Serveur principal</span>
                     </div>` : ''}
                 </div>
             </div>
@@ -1149,9 +1149,9 @@ function populateJavaExecDetails(execPath){
         if(v.valid){
             const vendor = v.vendor != null ? ` (${v.vendor})` : ''
             if(v.version.major < 9) {
-                settingsJavaExecDetails.innerHTML = `Selected: Java ${v.version.major} Update ${v.version.update} (x${v.arch})${vendor}`
+                settingsJavaExecDetails.innerHTML = `Sélectionné: Java ${v.version.major} Update ${v.version.update} (x${v.arch})${vendor}`
             } else {
-                settingsJavaExecDetails.innerHTML = `Selected: Java ${v.version.major}.${v.version.minor}.${v.version.revision} (x${v.arch})${vendor}`
+                settingsJavaExecDetails.innerHTML = `Sélectionné: Java ${v.version.major}.${v.version.minor}.${v.version.revision} (x${v.arch})${vendor}`
             }
         } else {
             settingsJavaExecDetails.innerHTML = 'Sélection invalide'
@@ -1168,16 +1168,6 @@ function populateJavaReqDesc() {
     }
 }
 
-function populateJvmOptsLink() {
-    const mcVer = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer()).getMinecraftVersion()
-    if(Util.mcVersionAtLeast('1.17', mcVer)) {
-        settingsJvmOptsLink.innerHTML = 'Available Options for Java 17 (HotSpot VM)'
-        settingsJvmOptsLink.href = 'https://docs.oracle.com/en/java/javase/17/docs/specs/man/java.html#extra-options-for-java'
-    } else {
-        settingsJvmOptsLink.innerHTML = 'Available Options for Java 8 (HotSpot VM)'
-        settingsJvmOptsLink.href = `https://docs.oracle.com/javase/8/docs/technotes/tools/${process.platform === 'win32' ? 'windows' : 'unix'}/java.html`
-    }
-}
 
 /**
  * Prepare the Java tab for display.
@@ -1186,7 +1176,6 @@ function prepareJavaTab(){
     bindRangeSlider()
     populateMemoryStatus()
     populateJavaReqDesc()
-    populateJvmOptsLink()
 }
 
 /**
