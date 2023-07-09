@@ -2984,6 +2984,7 @@ input:checked + .toggleSwitchSlider:before {
     font-size: 12px;
     line-height: 20px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
+    padding: 0px 5px;
 }
 #settingsTooltip::after {
     content: " ";
