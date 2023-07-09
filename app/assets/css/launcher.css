@@ -1594,7 +1594,7 @@ input:checked + .toggleSwitchSlider:before {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background-color: #c32625;
+    background-color: #25c338;
     margin-right: 15px;
     transition: 0.25s ease;
 }
@@ -3363,6 +3363,7 @@ input:checked + .toggleSwitchSlider:before {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    height: max-content;
 }
 
 /*******************************************************************************
