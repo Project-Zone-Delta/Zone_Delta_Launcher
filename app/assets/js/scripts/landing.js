@@ -85,6 +85,7 @@ function setDownloadPercentage(value, max, percent = ((value/max)*100)){
  */
 function setLaunchEnabled(val){
     document.getElementById('launch_button').disabled = !val
+    document.getElementById('launch_button').textContent = !val ? "Jeu en cours..." : "Lancer le jeu"
 }
 
 // Bind launch button
@@ -203,7 +204,6 @@ document.getElementById("radioSettingsButton").onclick = (e) => {
 
 // Bind selected account
 function updateSelectedAccount(authUser){
-    console.log(authUser)
     let name;
     if(authUser != null){
         if(authUser.name != null){
