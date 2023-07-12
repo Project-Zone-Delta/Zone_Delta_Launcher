@@ -1394,18 +1394,20 @@ input:checked + .toggleSwitchSlider:before {
 .settingsAuthAccount {
     display: flex;
     background: rgba(0, 0, 0, 0.25);
-    border-radius: 3px;
+    border-radius: 5px;
     border: 1px solid rgba(126, 126, 126, 0.57);
+    padding: 10px;
 }
 
 /* Left hand side of an auth account element, for the skin image. */
 .settingsAuthAccountLeft {
-    padding: 5px 5px 5px 20px;
+    border-radius: 5px;
 }
 
 /* Image of the auth account's skin. */
 .settingsAuthAccountImage {
-    height: 115px;
+    height: 96px;
+    margin-right: 10px;
 }
 
 /* Right hand side of the auth account, for info + actions. */
@@ -1419,11 +1421,7 @@ input:checked + .toggleSwitchSlider:before {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-left: 20px;
-    width: 100px;
-}
-.settingsAuthAccountDetails > *:not(:last-child) {
-    margin-bottom: 20px;
+    gap: 2px;
 }
 
 /* Account detail element styles. */
@@ -1449,7 +1447,6 @@ input:checked + .toggleSwitchSlider:before {
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 10px;
     width: 100%;
 }
 
@@ -1482,7 +1479,6 @@ input:checked + .toggleSwitchSlider:before {
     border: 1px solid rgb(241, 55, 55);
     color: rgb(241, 55, 55);
     background: none;
-    font-size: 12px;
     border-radius: 3px;
     font-family: 'Avenir Medium';
     transition: 0.25s ease;
@@ -2873,9 +2869,30 @@ input:checked + .toggleSwitchSlider:before {
 }
 
 /* User profile name text. */
-#user_text {
+.user_info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+#user_name {
     font-size: 15px;
-    width: auto;
+    width: max-content;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-shadow: 0px 0px 20px black;
+    /*position: absolute;
+    right: 95px;*/
+    text-align: right;
+    -webkit-user-select: initial;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#user_role {
+    font-size: 15px;
+    width: max-content;
     font-weight: 900;
     letter-spacing: 1px;
     text-shadow: 0px 0px 20px black;
@@ -2914,7 +2931,7 @@ input:checked + .toggleSwitchSlider:before {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 27px;
+    height: 30px;
 }
 
 /* Divider bar between the external and internal icons. */
@@ -2930,13 +2947,7 @@ input:checked + .toggleSwitchSlider:before {
     fill: #ffffff;
     transition: 0.25s ease;
     cursor: pointer;
-    height: 90%;
-    width: 90%;
-}
-.mediaSVG:hover,
-.mediaURL:focus .mediaSVG,
-.mediaSVG:active {
-    height: 100%;
+    width: 24px;
 }
 
 /* Social media URL shared styles. */
@@ -2962,11 +2973,6 @@ input:checked + .toggleSwitchSlider:before {
 #settingsSVG {
     stroke: #ffffff;
     height: 23px;
-}
-.mediaButton:hover #settingsSVG,
-.mediaButton:focus #settingsSVG,
-.mediaButton:active #settingsSVG {
-    height: 25px;
 }
 
 /* Settings tooltip styles. */

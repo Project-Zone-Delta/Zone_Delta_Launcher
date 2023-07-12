@@ -183,6 +183,14 @@ class Server {
         return this.mainServer
     }
 
+    getMinRam() {
+        return this.minRam
+    }
+
+    getMaxRam() {
+        return this.maxRam
+    }
+
     /**
      * @returns {boolean} Whether or not the server is autoconnect.
      * by default.

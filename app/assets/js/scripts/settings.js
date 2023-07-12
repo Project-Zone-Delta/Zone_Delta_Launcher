@@ -4,7 +4,6 @@ const semver = require('semver')
 
 const { JavaGuard, Util } = require('./assets/js/assetguard')
 const DropinModUtil  = require('./assets/js/dropinmodutil')
-/* const { MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR } = require('./assets/js/ipcconstants') */
 
 const settingsState = {
     invalid: new Set()
@@ -488,6 +487,10 @@ function populateAuthAccounts(){
                         <div class="settingsAuthAccountDetailValue">${acc.name}</div>
                     </div>
                     <div class="settingsAuthAccountDetailPane">
+                        <div class="settingsAuthAccountDetailTitle">Rôle</div>
+                        <div class="settingsAuthAccountDetailValue" style="color: ${acc.user_info.role.color};">${acc.user_info.role.name}</div>
+                    </div>
+                    <div class="settingsAuthAccountDetailPane">
                         <div class="settingsAuthAccountDetailTitle">UUID</div>
                         <div class="settingsAuthAccountDetailValue">${acc.uuid}</div>
                     </div>
@@ -562,78 +565,6 @@ function resolveModsForUI(){
 }
 
 /**
- * Recursively build the mod UI elements.
- * 
- * @param {Object[]} mdls An array of modules to parse.
- * @param {boolean} submodules Whether or not we are parsing submodules.
- * @param {Object} servConf The server configuration object for this module level.
- */
-function parseModulesForUI(mdls, submodules, servConf){
-
-    let reqMods = ''
-    let optMods = ''
-
-    for(const mdl of mdls){
-
-        if(mdl.getType() === DistroManager.Types.ForgeMod || mdl.getType() === DistroManager.Types.LiteMod || mdl.getType() === DistroManager.Types.LiteLoader){
-
-            if(mdl.getRequired().isRequired()){
-
-                reqMods += `<div id="${mdl.getVersionlessID()}" class="settingsBaseMod settings${submodules ? 'Sub' : ''}Mod" enabled>
-                    <div class="settingsModContent">
-                        <div class="settingsModMainWrapper">
-                            <div class="settingsModStatus"></div>
-                            <div class="settingsModDetails">
-                                <span class="settingsModName">${mdl.getName()}</span>
-                                <span class="settingsModVersion">v${mdl.getVersion()}</span>
-                            </div>
-                        </div>
-                        <label class="toggleSwitch" reqmod>
-                            <input type="checkbox" checked>
-                            <span class="toggleSwitchSlider"></span>
-                        </label>
-                    </div>
-                    ${mdl.hasSubModules() ? `<div class="settingsSubModContainer">
-                        ${Object.values(parseModulesForUI(mdl.getSubModules(), true, servConf[mdl.getVersionlessID()])).join('')}
-                    </div>` : ''}
-                </div>`
-
-            } else {
-
-                const conf = servConf[mdl.getVersionlessID()]
-                const val = typeof conf === 'object' ? conf.value : conf
-
-                optMods += `<div id="${mdl.getVersionlessID()}" class="settingsBaseMod settings${submodules ? 'Sub' : ''}Mod" ${val ? 'enabled' : ''}>
-                    <div class="settingsModContent">
-                        <div class="settingsModMainWrapper">
-                            <div class="settingsModStatus"></div>
-                            <div class="settingsModDetails">
-                                <span class="settingsModName">${mdl.getName()}</span>
-                                <span class="settingsModVersion">v${mdl.getVersion()}</span>
-                            </div>
-                        </div>
-                        <label class="toggleSwitch">
-                            <input type="checkbox" formod="${mdl.getVersionlessID()}" ${val ? 'checked' : ''}>
-                            <span class="toggleSwitchSlider"></span>
-                        </label>
-                    </div>
-                    ${mdl.hasSubModules() ? `<div class="settingsSubModContainer">
-                        ${Object.values(parseModulesForUI(mdl.getSubModules(), true, conf.mods)).join('')}
-                    </div>` : ''}
-                </div>`
-
-            }
-        }
-    }
-
-    return {
-        reqMods,
-        optMods
-    }
-
-}
-
-/**
  * Bind functionality to mod config toggle switches. Switching the value
  * will also switch the status color on the left of the mod UI.
  */
@@ -650,40 +581,6 @@ function bindModsToggleSwitch(){
     })
 }
 
-
-/**
- * Save the mod configuration based on the UI values.
- */
-/*function saveModConfiguration(){
-    const serv = ConfigManager.getSelectedServer()
-    const modConf = ConfigManager.getModConfiguration(serv)
-    modConf.mods = _saveModConfiguration(modConf.mods)
-    ConfigManager.setModConfiguration(serv, modConf)
-}*/
-
-/**
- * Recursively save mod config with submods.
- * 
- * @param {Object} modConf Mod config object to save.
- */
-/*function _saveModConfiguration(modConf){
-    for(let m of Object.entries(modConf)){
-        const tSwitch = settingsModsContainer.querySelectorAll(`[formod='${m[0]}']`)
-        if(!tSwitch[0].hasAttribute('dropin')){
-            if(typeof m[1] === 'boolean'){
-                modConf[m[0]] = tSwitch[0].checked
-            } else {
-                if(m[1] != null){
-                    if(tSwitch.length > 0){
-                        modConf[m[0]].value = tSwitch[0].checked
-                    }
-                    modConf[m[0]].mods = _saveModConfiguration(modConf[m[0]].mods)
-                }
-            }
-        }
-    }
-    return modConf
-}*/
 
 // Drop-in mod elements.
 
@@ -717,29 +614,6 @@ function resolveDropinModsForUI(){
     document.getElementById('settingsDropinModsContent').innerHTML = dropinMods
 }
 
-/**
- * Bind the remove button for each loaded drop-in mod.
- */
-function bindDropinModsRemoveButton(){
-    const sEls = settingsModsContainer.querySelectorAll('[remmod]')
-    Array.from(sEls).map((v, index, arr) => {
-        v.onclick = async () => {
-            const fullName = v.getAttribute('remmod')
-            const res = await DropinModUtil.deleteDropinMod(CACHE_SETTINGS_MODS_DIR, fullName)
-            if(res){
-                document.getElementById(fullName).remove()
-            } else {
-                setOverlayContent(
-                    `Failed to Delete<br>Drop-in Mod ${fullName}`,
-                    'Make sure the file is not in use and try again.',
-                    'Okay'
-                )
-                setOverlayHandler(null)
-                toggleOverlay(true)
-            }
-        }
-    })
-}
 
 /**
  * Save drop-in mod states. Enabling and disabling is just a matter
@@ -770,20 +644,12 @@ function saveDropinModConfiguration(){
 // Refresh the drop-in mods when F5 is pressed.
 // Only active on the mods tab.
 document.addEventListener('keydown', (e) => {
-    if(getCurrentView() === VIEWS.settings && selectedSettingsTab === 'settingsTabMods'){
-        if(e.key === 'F5'){
-            reloadDropinMods()
-            saveShaderpackSettings()
-            resolveShaderpacksForUI()
+    if(getCurrentView() === VIEWS.settings){
+        if(e.key === 'Escape'){
+            switchView(getCurrentView(), VIEWS.landing)
         }
     }
 })
-
-function reloadDropinMods(){
-    resolveDropinModsForUI()
-    bindDropinModsRemoveButton()
-    bindModsToggleSwitch()
-}
 
 // Shaderpack
 
@@ -907,32 +773,12 @@ Array.from(document.getElementsByClassName('settingsSwitchServerButton')).forEac
 })
 
 /**
- * Save mod configuration for the current selected server.
- */
-function saveAllModConfigurations(){
-    ConfigManager.save()
-    saveDropinModConfiguration()
-}
-
-/**
- * Function to refresh the current tab whenever the selected
- * server is changed.
- */
-function animateSettingsTabRefresh(){
-    $(`#${selectedSettingsTab}`).fadeOut(500, () => {
-        prepareSettings()
-        $(`#${selectedSettingsTab}`).fadeIn(500)
-    })
-}
-
-/**
  * Prepare the Mods tab for display.
  */
 function prepareModsTab(first){
     resolveModsForUI()
     resolveDropinModsForUI()
     resolveShaderpacksForUI()
-    bindDropinModsRemoveButton()
     bindShaderpackButton()
     bindModsToggleSwitch()
     loadSelectedServerOnModsTab()

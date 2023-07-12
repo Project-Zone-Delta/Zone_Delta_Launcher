@@ -17,7 +17,8 @@ const launch_progress         = document.getElementById('launch_progress')
 const launch_progress_label   = document.getElementById('launch_progress_label')
 const launch_details_text     = document.getElementById('launch_details_text')
 const server_selection_button = document.getElementById('server_selection_button')
-const user_text               = document.getElementById('user_text')
+const user_name               = document.getElementById('user_name')
+const user_role               = document.getElementById('user_role')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
 
@@ -202,7 +203,8 @@ document.getElementById("radioSettingsButton").onclick = (e) => {
 
 // Bind selected account
 function updateSelectedAccount(authUser){
-    let name = 'No Account Selected'
+    console.log(authUser)
+    let name;
     if(authUser != null){
         if(authUser.name != null){
             name = authUser.name
@@ -211,8 +213,13 @@ function updateSelectedAccount(authUser){
             document.getElementById('avatarContainer').style.backgroundImage = `url('https://zone-delta.xyz/api/skin-api/avatars/face/${authUser.name}')`
         }
     }
-    user_text.innerHTML = name
+    if(name) {
+        user_name.innerHTML = name
+        user_role.innerHTML = authUser.user_info.role.name;
+        user_role.style.color = authUser.user_info.role.color;
+    }
 }
+
 updateSelectedAccount(ConfigManager.getSelectedAccount())
 
 // Bind selected server
