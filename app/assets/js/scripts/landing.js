@@ -85,6 +85,7 @@ function setDownloadPercentage(value, max, percent = ((value/max)*100)){
  */
 function setLaunchEnabled(val){
     document.getElementById('launch_button').disabled = !val
+    document.getElementById('launch_button').textContent = !val ? "Jeu en cours..." : "Lancer le jeu"
 }
 
 // Bind launch button
@@ -203,7 +204,6 @@ document.getElementById("radioSettingsButton").onclick = (e) => {
 
 // Bind selected account
 function updateSelectedAccount(authUser){
-    console.log(authUser)
     let name;
     if(authUser != null){
         if(authUser.name != null){
@@ -337,8 +337,6 @@ function slide_(up){
         lCLRight.style.top = '-200vh'
         newsBtn.style.top = 'calc(130vh + 45px)'
         newsContainer.style.top = '0px'
-        //date.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
-        //landingContainer.style.background = 'rgba(29, 29, 29, 0.55)'
         landingContainer.style.background = 'rgba(0, 0, 0, 0.50)'
         setTimeout(() => {
             if(newsGlideCount === 1){
@@ -577,11 +575,6 @@ document.addEventListener('keydown', (e) => {
         if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
             document.getElementById(e.key === 'ArrowRight' ? 'newsNavigateRight' : 'newsNavigateLeft').click()
         }
-        // Interferes with scrolling an article using the down arrow.
-        // Not sure of a straight forward solution at this point.
-        // if(e.key === 'ArrowDown'){
-        //     document.getElementById('newsButton').click()
-        // }
     } else {
         if(getCurrentView() === VIEWS.landing){
             if(e.key === 'ArrowUp'){

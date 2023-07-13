@@ -1,5 +1,3 @@
-const axios = require('axios');
-
 let interval;
 
 const radio = new Audio('http://radio.zone-delta.xyz/listen/zone_delta/radio.mp3');
@@ -14,14 +12,20 @@ const radioTitle = document.getElementsByClassName('musique-title')?.[0];
 const authorName = document.getElementsByClassName('author-title')?.[0];
 const albumTitle = document.getElementsByClassName('album-title')?.[0];
 
+const timeDisplay = document.querySelector(".time-display");
+const song_progress = document.getElementById('song-progress');
+const song_time_elapsed = document.getElementsByClassName("time-display-played")?.[0];
+const song_time_total = document.getElementsByClassName("time-display-total")?.[0];
+
 function loadRadio() {
     initBtn();
     loadNowPlaying();
+    loadSongProgress();
 
     if (!interval) {
         interval = setInterval(() => {
             if (!radio.paused) loadNowPlaying();
-        }, 15_000);
+        }, 5_000);
     }
 
     homeRadioButton.onclick = () => {
@@ -70,24 +74,69 @@ function initBtn() {
     };
 }
 
+let np = null
+
 async function loadNowPlaying() {
-    const res = await axios.get('http://45.154.96.199:83/api/nowplaying/1').catch(console.error);
+    let res = await fetch("http://45.154.96.199:83/api/nowplaying/1")
 
-    if (!res) return;
+    if (res.status === 200)
+        res = await res.json()
 
-    const { data } = res;
+    console.log(res)
 
-    if (data?.live?.is_live) {
-        authorName.textContent = `Streamer : ${data.live.streamer_name}`;
+    is_live = res?.live?.is_live
+
+    if (is_live) {
+        timeDisplay.style.display = 'none'
+        song_progress.setAttribute('max', 0)
+        song_progress.setAttribute('value', 0)
+        authorName.textContent = `Streamer : ${res.live.streamer_name}`;
+    } else {
+        timeDisplay.style.display = 'flex'
+        song_progress.setAttribute('max', res.now_playing.duration)
     }
 
-    if (data?.now_playing?.song) {
-        albumTitle.textContent = data.now_playing.song.artist;
-        radioImage.src = data.now_playing.song.art;
-        document.documentElement.style.setProperty('--url-radio', `url('${data.now_playing.song.art}')`);
+    if (res?.now_playing?.song) {
+        albumTitle.textContent = res.now_playing.song.artist;
+        radioImage.src = res.now_playing.song.art;
+        document.documentElement.style.setProperty('--url-radio', `url('${res.now_playing.song.art}')`);
     }
 
-    radioTitle.textContent = data?.now_playing?.song?.title;
+    np = res?.now_playing;
+
+    radioTitle.textContent = res.now_playing.song.title;
+}
+let currentTime
+let is_live
+async function loadSongProgress() {
+    setInterval(
+        () => {
+            currentTime = Math.floor(Date.now() / 1000);
+
+            if (np == null || radio.paused || is_live)
+                return;
+
+            let currentTrackPlayedAt = np.played_at ?? 0;
+            let elapsed = currentTime - currentTrackPlayedAt;
+
+            if (elapsed < 0) {
+                elapsed = 0;
+            } else if (elapsed >= np.duration) {
+                elapsed = np.duration;
+            }
+
+            song_progress.setAttribute('value', elapsed)
+            song_progress.style.width = np.duration + "px"
+            song_time_elapsed.textContent = formatTime(elapsed)
+            song_time_total.textContent = formatTime(np.duration)
+            console.log(elapsed)
+            console.log(np.duration)
+            console.log(formatTime(elapsed))
+            console.log(formatTime(np.duration))
+            //currentTime.value = currentTime.value + 1;
+        },
+        500
+    );
 }
 
 radioImage.onload = () => {
@@ -148,4 +197,18 @@ function getColorAverage() {
     } catch(_) { /* empty */ }
 
     return defaultLayers;
+}
+
+function formatTime(seconds) {
+    seconds = parseInt(seconds);
+
+    let d = Math.floor(seconds / 86400),
+        h = Math.floor(seconds / 3600) % 24,
+        m = Math.floor(seconds / 60) % 60,
+        s = seconds % 60;
+
+    return (d > 0 ? d + 'd ' : '')
+        + (h > 0 ? ('0' + h).slice(-2) + ':' : '')
+        + ('0' + m).slice(-2) + ':'
+        + ('0' + s).slice(-2);
 }

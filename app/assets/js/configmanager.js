@@ -46,7 +46,6 @@ const firstLaunch = !fs.existsSync(configPath) && !fs.existsSync(configPathLEGAC
 
 exports.getAbsoluteMinRAM = function(){
     const mem = os.totalmem()
-    console.log(DistroManager.getDistribution().getServer(config.selectedServer).getMinRam())
     return DistroManager.getDistribution().getServer(config.selectedServer).getMinRam();
 }
 

@@ -43,24 +43,6 @@ DistroManager.pullRemote().then((data) => {
 
     logger.info('Attempting to load an older version of the distribution index.')
     onDistroLoad(null)
-
-    // Try getting a local copy, better than nothing.
-    /*DistroManager.pullLocal().then((data) => {
-        logger.info('Successfully loaded an older version of the distribution index.')
-
-        onDistroLoad(data)
-
-
-    }).catch((err) => {
-
-        logger.info('Failed to load an older version of the distribution index.')
-        logger.info('Application cannot run.')
-        logger.error(err)
-
-        onDistroLoad(null)
-
-    })*/
-
 })
 
 // Clean up temp dir incase previous launches ended unexpectedly. 

@@ -12,7 +12,6 @@
 const ConfigManager                     = require('./configmanager')
 const { LoggerUtil }                    = require('helios-core')
 
-//const azAuth = require('azuriom-auth')
 const { AZauth } = require('minecraft-java-core')
 const auth = new AZauth('https://zone-delta.xyz');
 

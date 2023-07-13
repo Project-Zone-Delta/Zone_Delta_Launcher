@@ -1,110 +1,6 @@
-const fs = require('fs')
-const path = require('path')
-const request = require('request')
 const { LoggerUtil } = require('helios-core')
 
-const ConfigManager = require('./configmanager')
-
 const logger = LoggerUtil.getLogger('DistroManager')
-
-/**
- * Represents the download information
- * for a specific module.
- */
-class Artifact {
-    
-    /**
-     * Parse a JSON object into an Artifact.
-     * 
-     * @param {Object} json A JSON object representing an Artifact.
-     * 
-     * @returns {Artifact} The parsed Artifact.
-     */
-    static fromJSON(json){
-        return Object.assign(new Artifact(), json)
-    }
-
-    /**
-     * Get the MD5 hash of the artifact. This value may
-     * be undefined for artifacts which are not to be
-     * validated and updated.
-     * 
-     * @returns {string} The MD5 hash of the Artifact or undefined.
-     */
-    getHash(){
-        return this.MD5
-    }
-
-    /**
-     * @returns {number} The download size of the artifact.
-     */
-    getSize(){
-        return this.size
-    }
-
-    /**
-     * @returns {string} The download url of the artifact.
-     */
-    getURL(){
-        return this.url
-    }
-
-    /**
-     * @returns {string} The artifact's destination path.
-     */
-    getPath(){
-        return this.path
-    }
-
-}
-exports.Artifact
-
-/**
- * Represents a the requirement status
- * of a module.
- */
-class Required {
-    
-    /**
-     * Parse a JSON object into a Required object.
-     * 
-     * @param {Object} json A JSON object representing a Required object.
-     * 
-     * @returns {Required} The parsed Required object.
-     */
-    static fromJSON(json){
-        if(json == null){
-            return new Required(true, true)
-        } else {
-            return new Required(json.value == null ? true : json.value, json.def == null ? true : json.def)
-        }
-    }
-
-    constructor(value, def){
-        this.value = value
-        this.default = def
-    }
-
-    /**
-     * Get the default value for a required object. If a module
-     * is not required, this value determines whether or not
-     * it is enabled by default.
-     * 
-     * @returns {boolean} The default enabled value.
-     */
-    isDefault(){
-        return this.default
-    }
-
-    /**
-     * @returns {boolean} Whether or not the module is required.
-     */
-    isRequired(){
-        return this.value
-    }
-
-}
-exports.Required
 
 /**
  * Represents a server configuration.
@@ -183,10 +79,18 @@ class Server {
         return this.mainServer
     }
 
+    /**
+     * 
+     * @returns {number}
+     */
     getMinRam() {
         return this.minRam
     }
 
+    /**
+     * 
+     * @returns {string}
+     */
     getMaxRam() {
         return this.maxRam
     }
@@ -197,10 +101,6 @@ class Server {
      */
     isAutoConnect(){
         return this.autoconnect
-    }
-
-    getThis() {
-        return this;
     }
 }
 exports.Server
@@ -298,21 +198,7 @@ class DistroIndex {
 }
 exports.DistroIndex
 
-exports.Types = {
-    Library: 'Library',
-    ForgeHosted: 'ForgeHosted',
-    Forge: 'Forge', // Unimplemented
-    LiteLoader: 'LiteLoader',
-    ForgeMod: 'ForgeMod',
-    LiteMod: 'LiteMod',
-    File: 'File',
-    VersionManifest: 'VersionManifest'
-}
-
 let DEV_MODE = false
-
-const DISTRO_PATH = path.join(ConfigManager.getLauncherDirectory(), 'distribution.json')
-const DEV_PATH = path.join(ConfigManager.getLauncherDirectory(), 'dev_distribution.json')
 
 let data = null
 

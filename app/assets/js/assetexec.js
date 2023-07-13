@@ -9,7 +9,6 @@ let tracker = new target(...(process.argv.splice(3)))
 const { LoggerUtil } = require('helios-core')
 const logger = LoggerUtil.getLogger('AssetExec')
 
-//const tracker = new AssetGuard(process.argv[2], process.argv[3])
 logger.info('AssetExec Started')
 
 // Temporary for debug purposes.

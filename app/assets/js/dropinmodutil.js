@@ -1,13 +1,10 @@
 const fs        = require('fs-extra')
 const path      = require('path')
-const { ipcRenderer, shell } = require('electron')
-const { SHELL_OPCODE } = require('./ipcconstants')
 
 // Group #1: File Name (without .disabled, if any)
 // Group #2: File Extension (jar, zip, or litemod)
 // Group #3: If it is disabled (if string 'disabled' is present)
 const MOD_REGEX = /^(.+(jar|zip|litemod))(?:\.(disabled))?$/
-const DISABLED_EXT = '.disabled'
 
 const SHADER_REGEX = /^(.+)\.zip$/
 const SHADER_OPTION = /shaderPack=(.+)/
@@ -67,81 +64,6 @@ exports.scanForDropinMods = function(modsDir, version) {
         }
     }
     return modsDiscovered
-}
-
-/**
- * Add dropin mods.
- * 
- * @param {FileList} files The files to add.
- * @param {string} modsDir The path to the mods directory.
- */
-exports.addDropinMods = function(files, modsdir) {
-
-    exports.validateDir(modsdir)
-
-    for(let f of files) {
-        if(MOD_REGEX.exec(f.name) != null) {
-            fs.moveSync(f.path, path.join(modsdir, f.name))
-        }
-    }
-
-}
-
-/**
- * Delete a drop-in mod from the file system.
- * 
- * @param {string} modsDir The path to the mods directory.
- * @param {string} fullName The fullName of the discovered mod to delete.
- * 
- * @returns {Promise.<boolean>} True if the mod was deleted, otherwise false.
- */
-exports.deleteDropinMod = async function(modsDir, fullName){
-
-    const res = await ipcRenderer.invoke(SHELL_OPCODE.TRASH_ITEM, path.join(modsDir, fullName))
-
-    if(!res.result) {
-        shell.beep()
-        console.error('Error deleting drop-in mod.', res.error)
-        return false
-    }
-
-    return true
-}
-
-/**
- * Toggle a discovered mod on or off. This is achieved by either 
- * adding or disabling the .disabled extension to the local file.
- * 
- * @param {string} modsDir The path to the mods directory.
- * @param {string} fullName The fullName of the discovered mod to toggle.
- * @param {boolean} enable Whether to toggle on or off the mod.
- * 
- * @returns {Promise.<void>} A promise which resolves when the mod has
- * been toggled. If an IO error occurs the promise will be rejected.
- */
-exports.toggleDropinMod = function(modsDir, fullName, enable){
-    return new Promise((resolve, reject) => {
-        const oldPath = path.join(modsDir, fullName)
-        const newPath = path.join(modsDir, enable ? fullName.substring(0, fullName.indexOf(DISABLED_EXT)) : fullName + DISABLED_EXT)
-
-        fs.rename(oldPath, newPath, (err) => {
-            if(err){
-                reject(err)
-            } else {
-                resolve()
-            }
-        })
-    })
-}
-
-/**
- * Check if a drop-in mod is enabled.
- * 
- * @param {string} fullName The fullName of the discovered mod to toggle.
- * @returns {boolean} True if the mod is enabled, otherwise false.
- */
-exports.isDropinModEnabled = function(fullName){
-    return !fullName.endsWith(DISABLED_EXT)
 }
 
 /**
@@ -234,5 +156,4 @@ exports.addShaderpacks = function(files, instanceDir) {
             fs.moveSync(f.path, path.join(p, f.name))
         }
     }
-
 }

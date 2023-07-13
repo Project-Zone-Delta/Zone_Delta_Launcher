@@ -323,7 +323,6 @@ function settingsSaveDisabled(v){
 function fullSettingsSave() {
     saveSettingsValues()
     ConfigManager.save()
-    saveDropinModConfiguration()
     saveShaderpackSettings()
 }
 
@@ -612,33 +611,6 @@ function resolveDropinModsForUI(){
     }
 
     document.getElementById('settingsDropinModsContent').innerHTML = dropinMods
-}
-
-
-/**
- * Save drop-in mod states. Enabling and disabling is just a matter
- * of adding/removing the .disabled extension.
- */
-function saveDropinModConfiguration(){
-    for(dropin of CACHE_DROPIN_MODS){
-        const dropinUI = document.getElementById(dropin.fullName)
-        if(dropinUI != null){
-            const dropinUIEnabled = dropinUI.hasAttribute('enabled')
-            if(DropinModUtil.isDropinModEnabled(dropin.fullName) != dropinUIEnabled){
-                DropinModUtil.toggleDropinMod(CACHE_SETTINGS_MODS_DIR, dropin.fullName, dropinUIEnabled).catch(err => {
-                    if(!isOverlayVisible()){
-                        setOverlayContent(
-                            'Failed to Toggle<br>One or More Drop-in Mods',
-                            err.message,
-                            'Okay'
-                        )
-                        setOverlayHandler(null)
-                        toggleOverlay(true)
-                    }
-                })
-            }
-        }
-    }
 }
 
 // Refresh the drop-in mods when F5 is pressed.
