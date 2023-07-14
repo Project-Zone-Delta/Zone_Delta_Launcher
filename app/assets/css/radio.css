@@ -85,7 +85,7 @@
 .slider input {
     position: absolute;
     left: 1px;
-    top: 2.5px;
+    top: 2px;
     width: 195px;
     height: 20px;
     -webkit-appearance: none;
@@ -181,7 +181,7 @@
 
 .time-display {
     font-size: 10px;
-    margin-top: .50rem;
+    margin-top: 3rem;
     flex-direction: row;
     align-items: center;
     display: flex;
@@ -204,7 +204,7 @@
 }
 
 .time-display-progress progress::-webkit-progress-bar {
-    background-color: #2c2c2d6c !important;
+    background-color: #807f7f !important;
 }
 
 .time-display-progress progress::-webkit-progress-value {

@@ -6,7 +6,6 @@ document.getElementById('welcomeButton').addEventListener('click', e => {
     loginOptionsViewOnLoginCancel = VIEWS.welcome
     switchView(VIEWS.welcome, VIEWS.login, () => {
         loginViewOnSuccess = loginOptionsViewOnLoginSuccess
-        
         loginCancelEnabled(false)
     })
 })

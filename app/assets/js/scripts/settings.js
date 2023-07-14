@@ -613,9 +613,8 @@ function resolveDropinModsForUI(){
     document.getElementById('settingsDropinModsContent').innerHTML = dropinMods
 }
 
-// Refresh the drop-in mods when F5 is pressed.
-// Only active on the mods tab.
-document.addEventListener('keydown', (e) => {
+
+document.addEventListener('keyup', (e) => {
     if(getCurrentView() === VIEWS.settings){
         if(e.key === 'Escape'){
             switchView(getCurrentView(), VIEWS.landing)
@@ -779,7 +778,7 @@ const SETTINGS_MIN_MEMORY = ConfigManager.getAbsoluteMinRAM()
 settingsMaxRAMRange.setAttribute('max', SETTINGS_MAX_MEMORY)
 settingsMaxRAMRange.setAttribute('min', SETTINGS_MIN_MEMORY)
 settingsMinRAMRange.setAttribute('max', SETTINGS_MAX_MEMORY)
-settingsMinRAMRange.setAttribute('min', SETTINGS_MIN_MEMORY )
+settingsMinRAMRange.setAttribute('min', SETTINGS_MIN_MEMORY)
 
 // Bind on change event for min memory container.
 settingsMinRAMRange.onchange = (e) => {

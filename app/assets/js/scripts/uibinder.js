@@ -38,11 +38,11 @@ let currentView
  * fades in.
  */
 function switchView(current, next, currentFadeTime = 300, nextFadeTime = 300, onCurrentFade = () => {}, onNextFade = () => {}){
-    currentView = next
     $(`${current}`).fadeOut(currentFadeTime, () => {
         onCurrentFade()
         $(`${next}`).fadeIn(nextFadeTime, () => {
             onNextFade()
+            currentView = next;
         })
     })
 }
@@ -59,7 +59,7 @@ function getCurrentView(){
 function showMainUI(data){
 
     if(!isDev){
-        loggerAutoUpdater.info('Initializing..')
+        loggerAutoUpdater.info('Initializing...')
         ipcRenderer.send('autoUpdateAction', 'initAutoUpdater', ConfigManager.getAllowPrerelease())
     }
 
@@ -68,7 +68,6 @@ function showMainUI(data){
     refreshServerStatus()
     setTimeout(() => {
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
-        //document.body.style.backgroundImage = `url('assets/images/backgrounds/${document.body.getAttribute('bkid')}.jpg')`
         $('#main').show()
 
         const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
@@ -92,7 +91,6 @@ function showMainUI(data){
                 switchView(VIEWS.welcome, VIEWS.login, () => {
                     loginCancelEnabled(false)
                 })
-                //currentView = VIEWS.loginOptions
                 $(VIEWS.loginOptions).fadeIn(1000)
             }
         }
@@ -115,9 +113,9 @@ function showFatalStartupError(){
         $('#loadingContainer').fadeOut(250, () => {
             document.getElementById('overlayContainer').style.background = 'none'
             setOverlayContent(
-                'Fatal Error: Unable to Load Distribution Index',
-                'A connection could not be established to our servers to download the distribution index. No local copies were available to load. <br><br>The distribution index is an essential file which provides the latest server information. The launcher is unable to start without it. Ensure you are connected to the internet and relaunch the application.',
-                'Close'
+                'Erreur fatale : Impossible de charger l\'index de distribution',
+                'Une erreur est survenue lors de la connexion au serveur, nous n\'avons donc pas pu récupérer les informations du serveur.',
+                'Fermer'
             )
             setOverlayHandler(() => {
                 const window = remote.getCurrentWindow()

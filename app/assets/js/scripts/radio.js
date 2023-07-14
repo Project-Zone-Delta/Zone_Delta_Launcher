@@ -82,8 +82,6 @@ async function loadNowPlaying() {
     if (res.status === 200)
         res = await res.json()
 
-    console.log(res)
-
     is_live = res?.live?.is_live
 
     if (is_live) {
@@ -129,13 +127,8 @@ async function loadSongProgress() {
             song_progress.style.width = np.duration + "px"
             song_time_elapsed.textContent = formatTime(elapsed)
             song_time_total.textContent = formatTime(np.duration)
-            console.log(elapsed)
-            console.log(np.duration)
-            console.log(formatTime(elapsed))
-            console.log(formatTime(np.duration))
-            //currentTime.value = currentTime.value + 1;
         },
-        500
+        100
     );
 }
 
@@ -212,3 +205,11 @@ function formatTime(seconds) {
         + ('0' + m).slice(-2) + ':'
         + ('0' + s).slice(-2);
 }
+
+document.addEventListener('keyup', (e) => {
+    if(getCurrentView() === VIEWS.radio){
+        if(e.key === 'Escape'){
+            switchView(getCurrentView(), VIEWS.landing)
+        }
+    }
+})

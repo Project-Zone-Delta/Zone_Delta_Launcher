@@ -6,8 +6,6 @@ const { LoggerUtil } = require('helios-core')
 const nodeDiskInfo  = require('node-disk-info')
 const path          = require('path')
 const Registry      = require('winreg')
-const request       = require('request')
-
 // Classes
 
 /** Class representing a base asset. */
@@ -31,7 +29,6 @@ class Asset {
 }
 
 class Util {
-
     /**
      * Returns true if the actual version is greater than
      * or equal to the desired version.
@@ -134,17 +131,17 @@ class JavaGuard extends EventEmitter {
             return this._latestAdoptium(major)
         }
     }
-
+    
     static _latestAdoptium(major) {
 
         const majorNum = Number(major)
         const sanitizedOS = process.platform === 'win32' ? 'windows' : (process.platform === 'darwin' ? 'mac' : process.platform)
         const url = `https://api.adoptium.net/v3/assets/latest/${major}/hotspot?vendor=eclipse`
-
+        
         return new Promise((resolve, reject) => {
-            request({url, json: true}, (err, resp, body) => {
-                if(!err && body.length > 0){
-
+            fetch(url).then(ell => ell.json())
+            .then(body => {
+                if(body.length > 0){
                     const targetBinary = body.find(entry => {
                         return entry.version.major === majorNum
                             && entry.binary.os === sanitizedOS
@@ -193,18 +190,17 @@ class JavaGuard extends EventEmitter {
 
         const url = `https://corretto.aws/downloads/latest/amazon-corretto-${major}-x64-${sanitizedOS}-jdk.${ext}`
 
-        return new Promise((resolve, reject) => {
-            request.head({url, json: true}, (err, resp) => {
-                if(!err && resp.statusCode === 200){
-                    resolve({
-                        uri: url,
-                        size: parseInt(resp.headers['content-length']),
-                        name: url.substr(url.lastIndexOf('/')+1)
-                    })
-                } else {
-                    resolve(null)
-                }
-            })
+        return new Promise(async (resolve, reject) => {
+            const resp = await fetch(url, { method: 'HEAD' })
+            if (resp.statusCode === 200) {
+                resolve({
+                    uri: url,
+                    size: parseInt(resp.headers['content-length']),
+                    name: url.substr(url.lastIndexOf('/') + 1)
+                })
+            } else {
+                resolve(null)
+            }
         })
 
     }
@@ -254,12 +250,11 @@ class JavaGuard extends EventEmitter {
      */
     static loadMojangLauncherData(){
         return new Promise((resolve, reject) => {
-            request.get('https://launchermeta.mojang.com/mc/launcher.json', (err, resp, body) => {
-                if(err){
-                    resolve(null)
-                } else {
-                    resolve(JSON.parse(body))
-                }
+            fetch('https://launchermeta.mojang.com/mc/launcher.json').then(ell => ell.json())
+            .then(body => {
+                    resolve(body)
+            }).catch(err => {
+                console.log(err)
             })
         })
     }

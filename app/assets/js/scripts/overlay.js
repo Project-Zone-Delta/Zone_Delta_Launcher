@@ -310,7 +310,6 @@ function populateAccountListings(){
         </button>`
     }
     document.getElementById('accountSelectListScrollable').innerHTML = htmlString
-
 }
 
 function prepareServerSelectionList(){

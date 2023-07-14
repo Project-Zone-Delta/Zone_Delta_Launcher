@@ -239,7 +239,7 @@ function updateSelectedServer(serv){
     }
 }
 // Real text is set in uibinder.js on distributionIndexDone.
-server_selection_button.innerHTML = '\u2022 Loading..'
+server_selection_button.innerHTML = '\u2022 Chargement..'
 server_selection_button.onclick = (e) => {
     e.target.blur()
     toggleServerSelection(true)
@@ -260,7 +260,7 @@ const refreshServerStatus = async function(fade = false){
         pVal = servStat.players.online + '/' + servStat.players.max
 
     } catch (err) {
-        loggerLanding.warn('Unable to refresh server status, assuming offline.')
+        loggerLanding.warn('Impossible d\'actualiser l\'état du serveur, serveur hors ligne.')
         loggerLanding.debug(err)
     }
     if(fade){
@@ -380,6 +380,18 @@ document.getElementById('newsButton').onclick = () => {
     slide_(!newsActive)
     newsActive = !newsActive
 }
+
+
+document.addEventListener('keyup', (e) => {
+    if(newsActive){
+        if(e.key === 'Escape'){
+            $('#landingContainer *').removeAttr('tabindex')
+            $('#newsContainer *').attr('tabindex', '-1')
+            slide_(!newsActive)
+            document.getElementById('newsButton').click()
+        }
+    }
+})
 
 // Array to store article meta.
 let newsArr = null

@@ -198,8 +198,6 @@ class DistroIndex {
 }
 exports.DistroIndex
 
-let DEV_MODE = false
-
 let data = null
 
 /**
@@ -211,7 +209,7 @@ exports.pullRemote = function(){
         const distroURL = 'http://node.zone-delta.xyz:25008/'
 
         let distroInfos
-        const distro = await fetch(distroURL)
+        const distro = await fetch(distroURL, { timeout: 16000 })
         
         distroInfos = await distro.json()
 
@@ -220,20 +218,6 @@ exports.pullRemote = function(){
         resolve(data)
         return
     })
-}
-
-exports.setDevMode = function(value){
-    if(value){
-        logger.info('Developer mode enabled.')
-        logger.info('If you don\'t know what that means, revert immediately.')
-    } else {
-        logger.info('Developer mode disabled.')
-    }
-    DEV_MODE = value
-}
-
-exports.isDevMode = function(){
-    return DEV_MODE
 }
 
 /**
