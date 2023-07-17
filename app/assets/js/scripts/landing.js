@@ -277,7 +277,7 @@ const refreshServerStatus = async function(fade = false){
 }
 
 // Set refresh rate to once every 5 minutes.
-let serverStatusListener = setInterval(() => refreshServerStatus(true), 300000)
+let serverStatusListener = setInterval(() => refreshServerStatus(true), 60000)
 
 /**
  * Shows an error overlay, toggles off the launch area.

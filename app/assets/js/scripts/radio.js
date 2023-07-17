@@ -24,7 +24,7 @@ function loadRadio() {
 
     if (!interval) {
         interval = setInterval(() => {
-            if (!radio.paused) loadNowPlaying();
+            loadNowPlaying();
         }, 5_000);
     }
 
@@ -111,7 +111,7 @@ async function loadSongProgress() {
         () => {
             currentTime = Math.floor(Date.now() / 1000);
 
-            if (np == null || radio.paused || is_live)
+            if (np == null || is_live)
                 return;
 
             let currentTrackPlayedAt = np.played_at ?? 0;
