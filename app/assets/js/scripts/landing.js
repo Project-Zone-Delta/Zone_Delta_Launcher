@@ -210,7 +210,7 @@ function updateSelectedAccount(authUser){
             name = authUser.name
         }
         if(authUser.uuid != null){
-            document.getElementById('avatarContainer').style.backgroundImage = `url('https://zone-delta.xyz/api/skin-api/avatars/face/${authUser.name}')`
+            document.getElementById('avatarContainer').style.backgroundImage = `url('https://zone-delta.xyz/api/skin-api/avatars/face/${authUser.name.toLowerCase()}')`
         }
     }
     if(name) {
