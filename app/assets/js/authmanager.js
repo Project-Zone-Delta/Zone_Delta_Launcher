@@ -9,6 +9,7 @@
  * @module authmanager
  */
 // Requirements
+const errors = require('adm-zip/util/errors');
 const ConfigManager                     = require('./configmanager')
 const { LoggerUtil }                    = require('helios-core')
 
@@ -55,32 +56,19 @@ exports.addMojangAccount = async function(email, password, a2f) {
  * 
  * @param {string} uuid The UUID of the account to be removed.
  * @param {string} accessToken The UUID of the account to be removed.
- * @returns {Promise.<void>} Promise which resolves to void when the action is complete.
+ * @returns {Promise.<boolean>} Promise which resolves to void when the action is complete.
  */
 exports.removeAzAuthAccount = async function(uuid, accessToken) {
     try {
         const authAcc = ConfigManager.getAuthAccount(uuid)
+        await auth.signout(authAcc);
         ConfigManager.removeAuthAccount(uuid)
         ConfigManager.save()
-        return Promise.resolve()
+        return true;
     } catch (err){
         log.error('Error while removing account', err)
         return Promise.reject(err)
     }
-}
-
-/**
- * Validate the selected account with Mojang's authserver. If the account is not valid,
- * we will attempt to refresh the access token and update that value. If that fails, a
- * new login will be required.
- * 
- * @returns {Promise.<boolean>} Promise which resolves to true if the access token is valid,
- * otherwise false.
- */
-async function validateSelectedMojangAccount() {
-    const current                       = ConfigManager.getSelectedAccount()
-
-    return true;
 }
 
 /**
@@ -90,7 +78,11 @@ async function validateSelectedMojangAccount() {
  * otherwise false.
  */
 exports.validateSelected = async function(){
-    const current                       = ConfigManager.getSelectedAccount()
-    
-    return await validateSelectedMojangAccount()
+    const current = ConfigManager.getSelectedAccount()
+    let result = await auth.verify(current)
+
+    if (result.error)
+        return false;
+
+    return true
 }
