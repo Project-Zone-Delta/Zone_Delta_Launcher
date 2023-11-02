@@ -1,6 +1,6 @@
 let interval;
 
-const radio = new Audio('http://radio.zone-delta.xyz/listen/zone_delta/radio.mp3');
+const radio = new Audio('https://radio.zone-delta.xyz/listen/zone_delta/radio.mp3');
 
 const homeRadioButton = document.getElementsByClassName('radio-home-button')?.[0];
 
@@ -77,7 +77,7 @@ function initBtn() {
 let np = null
 
 async function loadNowPlaying() {
-    let res = await fetch("http://45.154.96.199:83/api/nowplaying/1")
+    let res = await fetch("https://radio.zone-delta.xyz/api/nowplaying/1")
 
     if (res.status === 200)
         res = await res.json()
