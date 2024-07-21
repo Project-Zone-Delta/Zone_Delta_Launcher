@@ -206,7 +206,7 @@ let data = null
 exports.pullRemote = function(){
     
     return new Promise(async (resolve, reject) => {
-        const distroURL = 'http://node.zone-delta.xyz:25008/'
+        const distroURL = 'https://launcher.zone-delta.xyz/old/'
 
         let distroInfos
         const distro = await fetch(distroURL, { timeout: 16000 })

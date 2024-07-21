@@ -97,7 +97,7 @@ document.getElementById('launch_button').addEventListener('click', async functio
 
     const SelectedServer = ConfigManager.getSelectedServer();
 
-    let mcInfos = await fetch("http://node.zone-delta.xyz:25008/")
+    let mcInfos = await fetch("https://launcher.zone-delta.xyz/old/")
     if (mcInfos.status === 200)
         mcInfos = await mcInfos.json()
 
